@@ -5,7 +5,7 @@ import { BlogsService } from 'src/services';
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
   @Get('/blogs')
-  getAll() {
+  async getAll() {
     return this.blogsService.getAllBlogs();
   }
 }
