@@ -1,1 +1,1 @@
-export * from './insert-blogs';
+export * from './insert-blog';

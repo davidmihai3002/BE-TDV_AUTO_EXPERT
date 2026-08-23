@@ -1,18 +1,53 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
     container_name: local-postgres
-    restart: always
+    restart: unless-stopped
+
     environment:
       POSTGRES_USER: ${LOCAL_DB_USER}
       POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD}
       POSTGRES_DB: ${LOCAL_DB_ENV}
+
     ports:
-      - ${LOCAL_DB_PORT}:5432
+      - '${LOCAL_DB_PORT}:5432'
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: local-api
+
+    env_file:
+      - .env.local
+
+    environment:
+      LOCAL_DB_HOST: postgres
+      LOCAL_DB_PORT: '5432'
+      PORT: '3000'
+
+    ports:
+      - '3000:3000'
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    command: npm run start:dev
 
 volumes:
   postgres_data:
