@@ -1,5 +1,3 @@
-// npm run insert:blog -- src/content/blogs/article.json
-
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { z } from 'zod';
