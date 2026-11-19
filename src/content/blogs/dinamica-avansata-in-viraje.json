@@ -1,0 +1,159 @@
+{
+  "title": "Dinamica avansată în viraje: fizica întâlnește precizia pe circuit",
+  "slug": "dinamica-avansata-in-viraje-exemplu",
+  "author": {
+    "slug": "marcus-vance",
+    "name": "Marcus Vance",
+    "role": "Instructor tehnic principal",
+    "avatarUrl": "/images/authors/marcus-vance.jpg",
+    "avatarAlt": "Marcus Vance, instructor tehnic principal",
+    "bio": "Marcus coordonează programele avansate și zilele pe circuit ale TDV Auto Expert, unde îi pregătește pe cursanți în dinamica autovehiculului, tehnica de frânare și alegerea traiectoriei."
+  },
+  "excerpt": "Viteza se naște din stabilitate. Află cum cercul de aderență, transferul de greutate, frânarea în viraj și disciplina accelerației te ajută să treci mai repede prin fiecare viraj.",
+  "image": "/images/blogs/dinamica-avansata-in-viraje/cover.jpg",
+  "imageAlt": "Mașină sport de culoare închisă, de înaltă performanță, care virează cu viteză pe un circuit la apus, cu fundalul estompat de mișcare.",
+  "imageWidth": 512,
+  "imageHeight": 286,
+  "seoTitle": "Dinamica avansată în viraje: fizică și precizie",
+  "seoDescription": "Cercul de aderență, transferul de greutate, frânarea în viraj și accelerația dozată, explicate de instructorul principal TDV Auto Expert.",
+  "categorySlug": "maiestrie-tehnica",
+  "tags": [
+    {
+      "slug": "avansat",
+      "name": "Avansat"
+    },
+    {
+      "slug": "tehnica",
+      "name": "Tehnică"
+    },
+    {
+      "slug": "viraje",
+      "name": "Viraje"
+    },
+    {
+      "slug": "franare",
+      "name": "Frânare"
+    }
+  ],
+  "images": [
+    {
+      "key": "diagrama-transfer-greutate",
+      "url": "/images/blogs/dinamica-avansata-in-viraje/diagrama-transfer-greutate.jpg",
+      "alt": "Model 3D tehnic, în linii de contur, al unui șasiu de mașină care arată cum sarcina se mută pe pneul din față exterior la frânare și în viraj.",
+      "caption": "Fig. 1.1: Deplasarea dinamică a sarcinii în faza de frânare în viraj.",
+      "width": 512,
+      "height": 279
+    }
+  ],
+  "publishedAt": "2024-11-12T09:00:00Z",
+  "content": {
+    "version": 2,
+    "blocks": [
+      {
+        "type": "paragraph",
+        "id": "introducere",
+        "variant": "lead",
+        "text": "Să stăpânești un viraj nu înseamnă doar să rotești volanul; este o negociere complexă cu legile fizicii. Piloții de elită știu că viteza se naște din stabilitate, iar stabilitatea depinde de cât de bine gestionezi distribuția dinamică a greutății mașinii. În acest modul analizăm fazele critice ale virajului, ca să-ți duci performanța pe circuit la nivelul următor."
+      },
+      {
+        "type": "heading",
+        "id": "fizica-aderentei",
+        "level": 2,
+        "text": "Fizica aderenței",
+        "iconName": "speed"
+      },
+      {
+        "type": "paragraph",
+        "id": "fizica-aderentei-p1",
+        "variant": "body",
+        "text": "Cercul de aderență stabilește limita absolută de aderență pe care o are un pneu în orice moment. Un pneu poate oferi 100% din aderența sa fie pentru viraj (accelerație laterală), fie pentru accelerare sau frânare (accelerație longitudinală). Combinarea celor două presupune un compromis."
+      },
+      {
+        "type": "checklist",
+        "id": "principiu-cercul-aderentei",
+        "title": "Principiu de bază: cercul de aderență",
+        "watermarkIconName": "analytics",
+        "items": [
+          "Frânarea maximă folosește 100% din aderența longitudinală și lasă 0% pentru viraj.",
+          "Frânarea în viraj face tranziția treptat: eliberezi frâna ca să faci loc aderenței necesare pentru virare."
+        ]
+      },
+      {
+        "type": "callout",
+        "id": "observatie-aderenta",
+        "variant": "insight",
+        "title": "Observația expertului",
+        "iconName": "lightbulb",
+        "text": "Dacă folosești 100% din aderența pneului pentru frânare, îți rămâne 0% pentru virare. Tranziția trebuie să fie perfect fluidă."
+      },
+      {
+        "type": "heading",
+        "id": "transferul-de-greutate",
+        "level": 2,
+        "text": "Mecanica transferului de greutate",
+        "iconName": "balance"
+      },
+      {
+        "type": "figure",
+        "id": "fig-transfer-greutate",
+        "imageKey": "diagrama-transfer-greutate",
+        "caption": "Fig. 1.1: Deplasarea dinamică a sarcinii în faza de frânare în viraj."
+      },
+      {
+        "type": "paragraph",
+        "id": "transferul-de-greutate-p1",
+        "variant": "body",
+        "text": "Centrul de greutate al unei mașini nu este static; se deplasează brusc sub sarcină. Frânarea mută greutatea în față, mărește suprafața de contact a pneurilor din față și îți oferă control maxim asupra direcției. Accelerarea o mută în spate și așază roțile din spate pentru tracțiune la ieșirea din apex."
+      },
+      {
+        "type": "heading",
+        "id": "franarea-in-viraj",
+        "level": 2,
+        "text": "Frânarea în viraj, pe înțeles",
+        "iconName": "trending_down"
+      },
+      {
+        "type": "paragraph",
+        "id": "franarea-in-viraj-p1",
+        "variant": "body",
+        "text": "Frânarea în viraj (trail braking) este tehnica prin care reduci treptat presiunea pe frână pe măsură ce intri în viraj. Menține aderența pe puntea față și ajută mașina să se rotească, ceea ce permite viteze de intrare mai mari."
+      },
+      {
+        "type": "steps",
+        "id": "pasi-franare-in-viraj",
+        "items": [
+          {
+            "title": "Apăsarea inițială",
+            "text": "Presiune fermă, în linie dreaptă, ca să reduci viteza eficient."
+          },
+          {
+            "title": "Tranziția",
+            "text": "Pe măsură ce unghiul de bracaj crește, presiunea pe frână trebuie să scadă proporțional."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "disciplina-acceleratiei",
+        "level": 2,
+        "text": "Disciplina accelerației",
+        "iconName": "settings_input_component"
+      },
+      {
+        "type": "paragraph",
+        "id": "disciplina-acceleratiei-p1",
+        "variant": "body",
+        "text": "Răbdarea este semnul unui maestru. Pedala de accelerație nu este un întrerupător pornit/oprit; este un reostat care dictează aderența punții spate și traiectoria de ieșire. Dacă accelerezi înainte de apex, muți prea devreme greutatea în spate, provoci subvirare și lărgești linia de ieșire."
+      },
+      {
+        "type": "callout",
+        "id": "sfat-acceleratie",
+        "variant": "tip",
+        "title": "Sfatul expertului",
+        "iconName": "warning",
+        "quote": true,
+        "text": "Așteaptă ca mașina să se rotească. Nu atinge accelerația până nu poți începe să îndrepți volanul. Pe măsură ce deschizi volanul, deschizi și accelerația, în proporție directă."
+      }
+    ]
+  }
+}
