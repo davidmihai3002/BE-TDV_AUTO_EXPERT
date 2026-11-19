@@ -105,10 +105,19 @@ Posts are added with a script (there is no admin UI yet):
 npm run insert-local:blog -- ./src/content/blogs/blog-example-1.json
 ```
 
-JSON fields: `title`, `slug` (ASCII kebab-case), `author`, `excerpt`, `image` (URL), `imageAlt` (Romanian),
-`categorySlug` (one of the `blog_categories` slugs), `content.blocks[]` (`id`, `heading`, `headingIconName`, `body`),
-optional `isFeatured` (default `false`; featuring a post un-features the previous one) and `publishedAt`
-(ISO datetime; a future date schedules the post). The read time is computed from the content (200 words/minute).
+JSON fields: `title`, `slug` (ASCII kebab-case; `categories`, `featured`, `related` are reserved), `excerpt`,
+`image` (URL or `/path` served by the FE), `imageAlt` (Romanian), optional `imageWidth`/`imageHeight`, `seoTitle`
+(≤ 70) and `seoDescription` (≤ 160), `categorySlug` (one of the `blog_categories` slugs), the author as
+`authorSlug` (existing) or an `author` object `{ slug, name, role, avatarUrl, avatarAlt, bio }` (upserted), `tags`
+(`[{ slug, name }]`, upserted), `images` (`[{ key, url, alt, caption?, width?, height? }]`, referenced by figure
+blocks), optional `isFeatured` (default `false`; featuring a post un-features the previous one) and `publishedAt`
+(ISO datetime; a future date schedules the post).
+
+`content` is the v2 block format, `{ "version": 2, "blocks": [...] }`, with block types `paragraph` (`lead`/`body`),
+`heading` (level 2/3, Material Symbols `iconName`), `checklist`, `callout` (`tip`/`insight`), `figure` (`imageKey`) and
+`steps`. `src/content/blogs/dinamica-avansata-in-viraje.json` is the full reference; the legacy flat format is still
+accepted and converted. Add `--dry-run` to validate a file without writing anything. The read time is computed from
+the content (200 words/minute).
 
 After editing post content directly in the database, recompute the stored read times with:
 
@@ -118,4 +127,5 @@ npm run recompute-local:blog-read-times
 
 `GET /blogs` is the paginated listing (no `content`): `page`, `pageSize` (or `limit`, max 24), `category`,
 `search` (diacritics-insensitive), `featured`, `sort=newest|oldest`. `GET /blogs/categories` returns the categories
-with post counts.
+with post counts. `GET /blogs/:slug` returns the full article (content with hydrated figures, author, tags,
+images, up to 3 related posts and SEO fields); `GET /blogs/:slug/related?limit=` returns only the related posts.
