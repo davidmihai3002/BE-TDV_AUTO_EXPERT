@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './common';
 
 const DEFAULT_CORS_ORIGINS = 'http://localhost:5173';
 
@@ -18,10 +17,11 @@ async function bootstrap() {
       .filter(Boolean),
     // POST for 03's POST /pricing/quote and 06's POST /bookings
     methods: ['GET', 'HEAD', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Accept', 'x-request-id'],
+    // lets the FE read the request id for support ("Cod referință")
+    exposedHeaders: ['x-request-id'],
     maxAge: 86400,
   });
-  app.useGlobalFilters(new AllExceptionsFilter());
   app.enableShutdownHooks();
 
   await app.listen(process.env.PORT ?? 3000);

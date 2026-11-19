@@ -4,7 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { db } from 'src/clients';
 import { AppModule } from './../src/app.module';
-import { AllExceptionsFilter, paginate } from 'src/common';
+import { paginate } from 'src/common';
 
 // Needs the local DB with migrations applied: npm run test:e2e:local
 describe('Foundation (e2e)', () => {
@@ -15,7 +15,6 @@ describe('Foundation (e2e)', () => {
       imports: [AppModule],
     }).compile();
     app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new AllExceptionsFilter());
     await app.init();
   });
 

@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import {
   BlogsModule,
@@ -10,6 +11,7 @@ import {
   PricingModule,
   SiteSettingsModule,
 } from './modules';
+import { AllExceptionsFilter, RequestLoggerMiddleware } from './common';
 
 @Module({
   imports: [
@@ -25,5 +27,11 @@ import {
     PricingModule,
     BookingsModule,
   ],
+  // APP_FILTER (not useGlobalFilters) so every app built from this module, incl. e2e tests, gets the same envelope
+  providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('{*splat}');
+  }
+}

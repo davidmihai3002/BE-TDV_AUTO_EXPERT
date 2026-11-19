@@ -1,6 +1,5 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
-import { AllExceptionsFilter } from 'src/common';
 import { AppModule } from '../src/app.module';
 
 /** App wired like main.ts. `trust proxy` lets tests vary X-Forwarded-For so the IP throttler is controllable. */
@@ -13,9 +12,9 @@ export async function createE2eApp(): Promise<NestExpressApplication> {
   app.enableCors({
     origin: ['http://localhost:5173'],
     methods: ['GET', 'HEAD', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Accept', 'x-request-id'],
+    exposedHeaders: ['x-request-id'],
   });
-  app.useGlobalFilters(new AllExceptionsFilter());
   await app.init();
   return app;
 }
