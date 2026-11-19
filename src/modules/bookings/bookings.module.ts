@@ -2,9 +2,11 @@ import { Module } from '@nestjs/common';
 import { BookingsOperations } from 'src/clients';
 import { BookingsController } from 'src/controllers';
 import { BookingsService } from 'src/services';
+import { PricingModule } from '../pricing';
 
-// 03's PR adds `imports: [PricingModule]` and injects PricingService into BookingsService.
 @Module({
+  // quoted_total is computed server-side by 03's PricingService
+  imports: [PricingModule],
   providers: [BookingsService, BookingsOperations],
   controllers: [BookingsController],
 })

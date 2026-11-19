@@ -87,7 +87,7 @@ describe('Bookings (e2e)', () => {
     expect(row.gdprConsentAt).toBeInstanceOf(Date);
   });
 
-  it('B2 full body: category uppercased, lessons stored, quotedTotal null (06)', async () => {
+  it('B2 full body: category uppercased, lessons stored, quoted_total computed by PricingService (03)', async () => {
     const row = await created201(
       body({
         lessonsCount: 15,
@@ -100,13 +100,42 @@ describe('Bookings (e2e)', () => {
     expect(row).toMatchObject({
       licenseCategory: 'B',
       lessonsCount: 15,
-      quotedTotal: null,
+      // Golf R (manual): 35 lei × 15 + 25 lei fee
+      quotedTotal: 550,
+      currency: 'RON',
     });
   });
 
-  it('B3 lessons without category → category B', async () => {
+  it('B3 lessons without category → category B, quote computed', async () => {
     const row = await created201(body({ lessonsCount: 15 }));
     expect(row.licenseCategory).toBe('B');
+    expect(row.quotedTotal).toBe(550);
+  });
+
+  it('B15 lessonsCount outside the pricing range → 400 on lessonsCount, nothing stored', async () => {
+    const res = await post(body({ lessonsCount: 10 })).expect(400);
+    expect(res.body).toMatchObject({
+      message: 'Numărul de lecții trebuie să fie între 15 și 60',
+      issues: [{ path: 'lessonsCount' }],
+    });
+  });
+
+  it('B16 car without an active rate → 201 with quoted_total NULL', async () => {
+    await db
+      .updateTable('pricingVehicleRates')
+      .set({ isActive: false })
+      .where('fleetId', '=', golfR.id)
+      .execute();
+    try {
+      const row = await created201(body({ lessonsCount: 20 }));
+      expect(row).toMatchObject({ lessonsCount: 20, quotedTotal: null });
+    } finally {
+      await db
+        .updateTable('pricingVehicleRates')
+        .set({ isActive: true })
+        .where('fleetId', '=', golfR.id)
+        .execute();
+    }
   });
 
   it('B4 client-sent quotedTotal → 400 (strict)', async () => {

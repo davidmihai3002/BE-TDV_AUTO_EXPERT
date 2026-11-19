@@ -1,7 +1,8 @@
 // Unit tests: no DB. Operations are mocked; the real module would open a pg pool (and kysely is ESM-only).
 jest.mock('src/clients', () => ({}));
 
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import type { PricingService } from '../pricing';
 import {
   BookingStatus,
   BookingTimeSlot,
@@ -14,7 +15,11 @@ const FLEET_ID = '6f1c1c1e-6d0b-4a51-9b4e-1f3c1a2b3c4d';
 
 describe('BookingsService', () => {
   const ops = { getBookableCar: jest.fn(), insertBooking: jest.fn() };
-  const service = new BookingsService(ops);
+  const pricing = { computeQuote: jest.fn() };
+  const service = new BookingsService(
+    ops,
+    pricing as unknown as PricingService,
+  );
   const base: CreateBookingDto = {
     fleetId: FLEET_ID,
     fullName: 'Ana Popescu',
@@ -32,7 +37,52 @@ describe('BookingsService', () => {
     });
   });
 
-  it('snapshots the instructor and keeps quotedTotal null even with lessons', async () => {
+  it('stores the server-computed quote when lessons are requested', async () => {
+    ops.getBookableCar.mockResolvedValue({ id: FLEET_ID, instructorId: 'i-1' });
+    pricing.computeQuote.mockResolvedValue({ total: 550 });
+    await service.createBooking({
+      ...base,
+      lessonsCount: 15,
+      licenseCategory: 'B',
+    });
+    expect(pricing.computeQuote).toHaveBeenCalledWith({
+      categoryCode: 'B',
+      vehicleId: FLEET_ID,
+      lessons: 15,
+    });
+    expect(ops.insertBooking).toHaveBeenCalledWith(
+      expect.objectContaining({ quotedTotal: 550, currency: 'RON' }),
+    );
+  });
+
+  it('pricing 400 becomes a lessonsCount field error; nothing is inserted', async () => {
+    ops.getBookableCar.mockResolvedValue({ id: FLEET_ID, instructorId: null });
+    pricing.computeQuote.mockRejectedValue(
+      new BadRequestException(
+        'Numărul de lecții trebuie să fie între 15 și 60',
+      ),
+    );
+    const err = await service
+      .createBooking({ ...base, lessonsCount: 10 })
+      .catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(BadRequestException);
+    expect((err as BadRequestException).getResponse()).toMatchObject({
+      issues: [{ path: 'lessonsCount' }],
+    });
+    expect(ops.insertBooking).not.toHaveBeenCalled();
+  });
+
+  it('car without a rate (pricing 404) is still booked with quotedTotal null', async () => {
+    ops.getBookableCar.mockResolvedValue({ id: FLEET_ID, instructorId: null });
+    pricing.computeQuote.mockRejectedValue(new NotFoundException());
+    await service.createBooking({ ...base, lessonsCount: 20 });
+    expect(ops.insertBooking).toHaveBeenCalledWith(
+      expect.objectContaining({ quotedTotal: null, lessonsCount: 20 }),
+    );
+  });
+
+  it('snapshots the instructor and defaults the category to B when lessons are requested', async () => {
+    pricing.computeQuote.mockResolvedValue({ total: 550 });
     ops.getBookableCar.mockResolvedValue({ id: FLEET_ID, instructorId: 'i-1' });
     const now = new Date('2026-11-19T10:00:00Z');
     const res = await service.createBooking({ ...base, lessonsCount: 15 }, now);
@@ -43,7 +93,7 @@ describe('BookingsService', () => {
         instructorId: 'i-1',
         lessonsCount: 15,
         licenseCategory: 'B', // defaulted because lessons were requested
-        quotedTotal: null,
+        quotedTotal: 550,
         currency: 'RON',
         email: null,
         message: null,
@@ -52,12 +102,17 @@ describe('BookingsService', () => {
     );
   });
 
-  it('leaves licenseCategory null when neither category nor lessons are given', async () => {
+  it('leaves licenseCategory null (and skips pricing) when neither category nor lessons are given', async () => {
     ops.getBookableCar.mockResolvedValue({ id: FLEET_ID, instructorId: null });
     await service.createBooking(base);
     expect(ops.insertBooking).toHaveBeenCalledWith(
-      expect.objectContaining({ licenseCategory: null, instructorId: null }),
+      expect.objectContaining({
+        licenseCategory: null,
+        instructorId: null,
+        quotedTotal: null,
+      }),
     );
+    expect(pricing.computeQuote).not.toHaveBeenCalled();
   });
 
   it('throws 404 for a missing or inactive car', async () => {
