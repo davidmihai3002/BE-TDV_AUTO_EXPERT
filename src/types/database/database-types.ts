@@ -8,6 +8,9 @@ import {
   BookingsTable,
   FleetTable,
   InstructorsTable,
+  LicenseCategoriesTable,
+  PricingSettingsTable,
+  PricingVehicleRatesTable,
   SiteSettingsTable,
   TagsTable,
 } from '..';
@@ -22,6 +25,9 @@ export interface Database {
   bookings: BookingsTable;
   fleet: FleetTable;
   instructors: InstructorsTable;
+  licenseCategories: LicenseCategoriesTable;
+  pricingSettings: PricingSettingsTable;
+  pricingVehicleRates: PricingVehicleRatesTable;
   siteSettings: SiteSettingsTable;
   tags: TagsTable;
 }

@@ -6,6 +6,7 @@ import {
   DatabaseModule,
   FleetModule,
   HealthModule,
+  PricingModule,
   SiteSettingsModule,
 } from './modules';
 
@@ -19,6 +20,7 @@ import {
     SiteSettingsModule,
     BlogsModule,
     FleetModule,
+    PricingModule,
     BookingsModule,
   ],
 })
