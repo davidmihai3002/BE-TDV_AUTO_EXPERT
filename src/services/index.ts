@@ -1,3 +1,4 @@
+export * from './bookings';
 export * from './blogs';
 export * from './fleet';
 export * from './health';

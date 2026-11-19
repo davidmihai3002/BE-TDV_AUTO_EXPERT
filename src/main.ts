@@ -1,11 +1,15 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common';
 
 const DEFAULT_CORS_ORIGINS = 'http://localhost:5173';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Behind a reverse proxy the throttler must key on the client IP, not the proxy's.
+  if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1);
 
   app.enableCors({
     origin: (process.env.CORS_ORIGINS ?? DEFAULT_CORS_ORIGINS)
