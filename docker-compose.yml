@@ -35,6 +35,7 @@ services:
       LOCAL_DB_HOST: postgres
       LOCAL_DB_PORT: '5432'
       PORT: '3000'
+      CORS_ORIGINS: 'http://localhost:5173'
 
     ports:
       - '3000:3000'

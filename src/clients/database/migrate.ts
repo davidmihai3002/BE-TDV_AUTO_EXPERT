@@ -5,37 +5,19 @@ import { Kysely, PostgresDialect } from 'kysely';
 import { FileMigrationProvider, Migrator } from 'kysely/migration';
 import { Pool } from 'pg';
 
-function getRequiredEnv(name: string): string {
-  const value = process.env[name];
+import { getDatabaseConfig } from './database-config';
 
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-
-  return value;
-}
-
-async function migrateToLatest(): Promise<void> {
-  const port = Number(getRequiredEnv('LOCAL_DB_PORT'));
-
-  if (Number.isNaN(port)) {
-    throw new Error('LOCAL_DB_PORT must be a valid number');
-  }
-
+/** `--down` rolls back exactly one migration; otherwise migrates to latest. */
+async function migrate(direction: 'up' | 'down'): Promise<void> {
+  // No CamelCasePlugin here: migrations use snake_case identifiers.
   const db = new Kysely<any>({
-    dialect: new PostgresDialect({
-      pool: new Pool({
-        host: getRequiredEnv('LOCAL_DB_HOST'),
-        port,
-        database: getRequiredEnv('LOCAL_DB_ENV'),
-        user: getRequiredEnv('LOCAL_DB_USER'),
-        password: getRequiredEnv('LOCAL_DB_PASSWORD'),
-      }),
-    }),
+    dialect: new PostgresDialect({ pool: new Pool(getDatabaseConfig()) }),
   });
 
   const migrator = new Migrator({
     db,
+    // Tickets merge in dependency order (01 → 04 → 05 → 06 → 03 → 02 → 07), not numeric order (plan §8).
+    allowUnorderedMigrations: true,
 
     provider: new FileMigrationProvider({
       fs,
@@ -48,12 +30,15 @@ async function migrateToLatest(): Promise<void> {
   });
 
   try {
-    const { error, results } = await migrator.migrateToLatest();
+    const { error, results } =
+      direction === 'down'
+        ? await migrator.migrateDown()
+        : await migrator.migrateToLatest();
 
     results?.forEach((result) => {
       if (result.status === 'Success') {
         console.log(
-          `Migration "${result.migrationName}" completed successfully`,
+          `Migration "${result.migrationName}" ${result.direction === 'Down' ? 'rolled back' : 'completed'} successfully`,
         );
       }
 
@@ -63,23 +48,27 @@ async function migrateToLatest(): Promise<void> {
     });
 
     if (error) {
-      throw error;
+      throw error instanceof Error
+        ? error
+        : new Error('Migration failed', { cause: error });
     }
 
-    console.log('Database is up to date');
+    if (direction === 'up') console.log('Database is up to date');
   } finally {
     await db.destroy();
   }
 }
 
-migrateToLatest().catch((error: unknown) => {
-  console.error('Could not run database migrations:');
+migrate(process.argv.includes('--down') ? 'down' : 'up').catch(
+  (error: unknown) => {
+    console.error('Could not run database migrations:');
 
-  if (error instanceof Error) {
-    console.error(error.message);
-  } else {
-    console.error(error);
-  }
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
 
-  process.exitCode = 1;
-});
+    process.exitCode = 1;
+  },
+);

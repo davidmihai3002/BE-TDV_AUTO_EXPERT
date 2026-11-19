@@ -20,7 +20,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "insert-local:blog": "node --env-file=.env.local --import tsx ./src/scripts/insert-blog.ts",
-    "migrate:local": "node --env-file=.env.local --import tsx ./src/clients/database/migrate.ts"
+    "migrate:local": "node --env-file=.env.local --import tsx ./src/clients/database/migrate.ts",
+    "migrate:local:down": "node --env-file=.env.local --import tsx ./src/clients/database/migrate.ts --down",
+    "test:e2e:local": "node --env-file=.env.local node_modules/.bin/jest --config ./test/jest-e2e.json --runInBand"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -41,6 +43,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
     "@types/supertest": "^7.0.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -73,6 +76,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }
