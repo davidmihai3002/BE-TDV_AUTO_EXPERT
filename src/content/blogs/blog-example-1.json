@@ -4,6 +4,8 @@
   "author": "David Popovici",
   "excerpt": "A practical tour of how controllers, services, modules, and database operations cooperate inside a NestJS backend.",
   "image": "https://images.example.com/nestjs-request-flow.jpg",
+  "imageAlt": "Schemă a unei cereri HTTP care trece prin controller, serviciu și baza de date într-o aplicație NestJS",
+  "categorySlug": "perspectiva-instructorilor",
   "content": {
     "blocks": [
       {

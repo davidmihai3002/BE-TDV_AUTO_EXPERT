@@ -1,7 +1,7 @@
-import { JSONColumnType } from 'kysely';
+import { ColumnType, JSONColumnType } from 'kysely';
 import { ImmutableGenerated, Timestamp } from '../database';
 
-interface BlogContentBlock {
+export interface BlogContentBlock {
   id: string;
   heading: string;
   headingIconName: string;
@@ -20,6 +20,12 @@ export interface BlogsTable {
   content: JSONColumnType<BlogContent, BlogContent, never>;
   excerpt: string;
   image: string;
-  // column published_at, mapped by CamelCasePlugin
-  publishedAt: Timestamp;
+  imageAlt: ColumnType<string, string | undefined, string>;
+  categoryId: string;
+  isFeatured: ColumnType<boolean, boolean | undefined, boolean>;
+  /** Word-based, computed on insert (BlogsUtils.computeReadTimeMinutes) */
+  readTimeMinutes: number;
+  // column published_at, mapped by CamelCasePlugin; settable on insert so seeds/scripts can backdate
+  publishedAt: ColumnType<Date, Date | string | undefined, never>;
+  updatedAt: Timestamp;
 }

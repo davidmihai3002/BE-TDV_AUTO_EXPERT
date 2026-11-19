@@ -1,61 +1,66 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { z } from 'zod';
 
 import { db } from '../clients/database';
+import { computeReadTimeMinutes } from '../common/utils/blogs-utils';
+import { insertBlogSchema } from '../types/blogs/blogs-schemas';
 
-const blogContentBlockSchema = z.object({
-  id: z.string().min(1),
-  heading: z.string().min(1),
-  headingIconName: z.string().min(1),
-  body: z.string().min(1),
-});
-
-const blogContentSchema = z.object({
-  blocks: z.array(blogContentBlockSchema).min(1),
-});
-
-const insertBlogSchema = z.object({
-  title: z.string().min(1),
-  slug: z.string().min(1),
-  author: z.string().min(1),
-  content: blogContentSchema,
-  excerpt: z.string().min(1),
-  image: z.string(),
-});
-
+/**
+ * Usage: npm run insert-local:blog -- ./src/content/blogs/my-blog.json
+ * JSON fields: title, slug, author, excerpt, image (URL), imageAlt, categorySlug, content.blocks[],
+ * optional isFeatured (default false) and publishedAt (ISO datetime, default now).
+ */
 async function insertBlog(): Promise<void> {
   const filePath = process.argv[2];
-
   if (!filePath) {
-    throw new Error('Usage: npm run insert:blog -- ./articles/my-blog.json');
+    throw new Error(
+      'Usage: npm run insert-local:blog -- ./src/content/blogs/my-blog.json',
+    );
   }
 
   const json = await readFile(resolve(filePath), 'utf8');
-  const unknownData: unknown = JSON.parse(json);
+  const { categorySlug, publishedAt, ...blog } = insertBlogSchema.parse(
+    JSON.parse(json) as unknown,
+  );
 
-  // Validates the runtime JSON and gives it a TypeScript type.
-  const blog = insertBlogSchema.parse(unknownData);
+  const inserted = await db.transaction().execute(async (trx) => {
+    const category = await trx
+      .selectFrom('blogCategories')
+      .select('id')
+      .where('slug', '=', categorySlug)
+      .executeTakeFirst();
+    if (!category) throw new Error(`Unknown category "${categorySlug}"`);
 
-  const insertedBlog = await db
-    .insertInto('blogs')
-    .values(blog)
-    .returningAll()
-    .executeTakeFirstOrThrow();
+    // only one featured post at a time (blogs_single_featured_idx)
+    if (blog.isFeatured) {
+      await trx
+        .updateTable('blogs')
+        .set({ isFeatured: false })
+        .where('isFeatured', '=', true)
+        .execute();
+    }
 
-  console.log(`Inserted "${insertedBlog.title}" with ID ${insertedBlog.id}`);
+    return trx
+      .insertInto('blogs')
+      .values({
+        ...blog,
+        categoryId: category.id,
+        readTimeMinutes: computeReadTimeMinutes(blog.content),
+        ...(publishedAt ? { publishedAt } : {}),
+      })
+      .returning(['id', 'title', 'readTimeMinutes'])
+      .executeTakeFirstOrThrow();
+  });
+
+  console.log(
+    `Inserted "${inserted.title}" with ID ${inserted.id} (${inserted.readTimeMinutes} min read)`,
+  );
 }
 
 insertBlog()
   .catch((error: unknown) => {
     console.error('Could not insert blog:');
-
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-
+    console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;
   })
   .finally(async () => {

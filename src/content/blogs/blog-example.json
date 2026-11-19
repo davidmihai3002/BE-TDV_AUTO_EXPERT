@@ -3,7 +3,9 @@
   "slug": "building-a-reliable-blog-data-flow-with-kysely",
   "author": "David Popovici",
   "excerpt": "A practical test article about moving structured blog content from a JSON file into PostgreSQL with Kysely.",
-  "image": "null",
+  "image": "https://images.example.com/blog-data-flow-kysely.jpg",
+  "imageAlt": "Diagramă a fluxului de date între un fișier JSON, aplicația Node.js și baza de date PostgreSQL",
+  "categorySlug": "perspectiva-instructorilor",
   "content": {
     "blocks": [
       {
