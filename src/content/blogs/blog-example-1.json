@@ -7,36 +7,72 @@
   "imageAlt": "Schemă a unei cereri HTTP care trece prin controller, serviciu și baza de date într-o aplicație NestJS",
   "categorySlug": "perspectiva-instructorilor",
   "content": {
+    "version": 2,
     "blocks": [
       {
+        "type": "heading",
         "id": "request-enters-controller",
-        "heading": "The Request Enters a Controller",
-        "headingIconName": "route",
-        "body": "When a client sends a request to a NestJS application, the controller is usually the first part of your own code that receives it. Decorators connect an HTTP method and route to a particular class method. A controller marked with Controller blogs and a method marked with Get handles a GET request for the blogs path. The controller should remain focused on HTTP concerns: reading parameters, accepting validated input, selecting an appropriate status, and returning a result. It should avoid containing database queries or complicated business rules. Instead, it delegates that work to a service and lets Nest serialize the returned value into JSON."
+        "level": 2,
+        "text": "The Request Enters a Controller",
+        "iconName": "route"
       },
       {
+        "type": "paragraph",
+        "id": "request-enters-controller-p1",
+        "variant": "body",
+        "text": "When a client sends a request to a NestJS application, the controller is usually the first part of your own code that receives it. Decorators connect an HTTP method and route to a particular class method. A controller marked with Controller blogs and a method marked with Get handles a GET request for the blogs path. The controller should remain focused on HTTP concerns: reading parameters, accepting validated input, selecting an appropriate status, and returning a result. It should avoid containing database queries or complicated business rules. Instead, it delegates that work to a service and lets Nest serialize the returned value into JSON."
+      },
+      {
+        "type": "heading",
         "id": "service-coordinates-work",
-        "heading": "The Service Coordinates the Work",
-        "headingIconName": "workflow",
-        "body": "The service sits between the transport layer and lower-level operations. It describes what the application wants to accomplish rather than how PostgreSQL should perform it. A blogs service might request every blog, calculate the estimated reading time for each article, and return the enriched collection. Constructor injection gives the service access to its collaborators without constructing them manually. Declaring a dependency as private readonly both creates the property and tells readers that the reference will not be replaced. Keeping orchestration in the service also makes the same behavior reusable from another controller, a scheduled task, or a command-line process in the future."
+        "level": 2,
+        "text": "The Service Coordinates the Work",
+        "iconName": "account_tree"
       },
       {
+        "type": "paragraph",
+        "id": "service-coordinates-work-p1",
+        "variant": "body",
+        "text": "The service sits between the transport layer and lower-level operations. It describes what the application wants to accomplish rather than how PostgreSQL should perform it. A blogs service might request every blog, calculate the estimated reading time for each article, and return the enriched collection. Constructor injection gives the service access to its collaborators without constructing them manually. Declaring a dependency as private readonly both creates the property and tells readers that the reference will not be replaced. Keeping orchestration in the service also makes the same behavior reusable from another controller, a scheduled task, or a command-line process in the future."
+      },
+      {
+        "type": "heading",
         "id": "operations-query-database",
-        "heading": "Operations Query the Database",
-        "headingIconName": "database",
-        "body": "A database operations class contains queries concerned with persistence. For example, getAllBlogs can call selectFrom blogs, select all required columns, and execute the query. The execute call matters because Kysely builders only describe SQL until an execution method is invoked. Once executed, Kysely sends parameterized SQL through the PostgreSQL connection and returns typed rows. Separating these queries from the service keeps database details in one place. If the query later needs sorting, filtering, pagination, or a transaction, the operations class can change without turning the controller into a collection of SQL decisions. PostgreSQL still remains responsible for enforcing lasting constraints."
+        "level": 2,
+        "text": "Operations Query the Database",
+        "iconName": "database"
       },
       {
+        "type": "paragraph",
+        "id": "operations-query-database-p1",
+        "variant": "body",
+        "text": "A database operations class contains queries concerned with persistence. For example, getAllBlogs can call selectFrom blogs, select all required columns, and execute the query. The execute call matters because Kysely builders only describe SQL until an execution method is invoked. Once executed, Kysely sends parameterized SQL through the PostgreSQL connection and returns typed rows. Separating these queries from the service keeps database details in one place. If the query later needs sorting, filtering, pagination, or a transaction, the operations class can change without turning the controller into a collection of SQL decisions. PostgreSQL still remains responsible for enforcing lasting constraints."
+      },
+      {
+        "type": "heading",
         "id": "module-connects-dependencies",
-        "heading": "The Module Connects Dependencies",
-        "headingIconName": "boxes",
-        "body": "A NestJS module explains how the pieces belong together. The controllers array registers classes that receive requests, while the providers array registers services, utilities, repositories, and other injectable dependencies. Nest reads this metadata and builds the required object graph. When BlogsController asks for BlogsService, Nest finds that provider and creates it. When BlogsService asks for BlogsOperations and BlogsUtils, Nest resolves those too. The feature becomes active when BlogsModule is reachable from AppModule, either directly or through another imported module. If another module needs one of its providers, the owner must export that provider and the consumer must import the owner."
+        "level": 2,
+        "text": "The Module Connects Dependencies",
+        "iconName": "inventory_2"
       },
       {
+        "type": "paragraph",
+        "id": "module-connects-dependencies-p1",
+        "variant": "body",
+        "text": "A NestJS module explains how the pieces belong together. The controllers array registers classes that receive requests, while the providers array registers services, utilities, repositories, and other injectable dependencies. Nest reads this metadata and builds the required object graph. When BlogsController asks for BlogsService, Nest finds that provider and creates it. When BlogsService asks for BlogsOperations and BlogsUtils, Nest resolves those too. The feature becomes active when BlogsModule is reachable from AppModule, either directly or through another imported module. If another module needs one of its providers, the owner must export that provider and the consumer must import the owner."
+      },
+      {
+        "type": "heading",
         "id": "trace-the-complete-flow",
-        "heading": "Trace the Complete Flow",
-        "headingIconName": "waypoints",
-        "body": "Following one request from beginning to end is a useful debugging technique. Start with the route and confirm that its controller is registered. Continue into the service and check that asynchronous operations are awaited. Then inspect the database method and confirm that the Kysely query is executed rather than merely returned as a builder. Finally, verify that the correct environment variables point to the intended database and that migrations have created the expected tables. Each layer has a narrow responsibility, so an error provides clues about where to look. Clear boundaries may feel verbose at first, but they make a growing backend easier to test and understand."
+        "level": 2,
+        "text": "Trace the Complete Flow",
+        "iconName": "conversion_path"
+      },
+      {
+        "type": "paragraph",
+        "id": "trace-the-complete-flow-p1",
+        "variant": "body",
+        "text": "Following one request from beginning to end is a useful debugging technique. Start with the route and confirm that its controller is registered. Continue into the service and check that asynchronous operations are awaited. Then inspect the database method and confirm that the Kysely query is executed rather than merely returned as a builder. Finally, verify that the correct environment variables point to the intended database and that migrations have created the expected tables. Each layer has a narrow responsibility, so an error provides clues about where to look. Clear boundaries may feel verbose at first, but they make a growing backend easier to test and understand."
       }
     ]
   }

@@ -83,12 +83,15 @@ describe('Blogs listing (e2e)', () => {
   });
 
   it('category filter; unknown category → empty 200', async () => {
+    // ticket 05 adds a related stub to this category, so compare the 04 seed posts only
     const body = await list('?category=condus-defensiv');
-    expect(body.items.map((i) => i.slug)).toEqual([
+    expect(seedOnly(body)).toEqual([
       'condusul-pe-timp-de-noapte-scanarea-vizuala',
       'condus-defensiv-avansat-stapanirea-apexului',
     ]);
-    expect(body.total).toBe(2);
+    expect(body.items.every((i) => i.category.slug === 'condus-defensiv')).toBe(
+      true,
+    );
     expect(await list('?category=nope')).toMatchObject({ items: [], total: 0 });
   });
 
@@ -153,7 +156,7 @@ describe('Blogs listing (e2e)', () => {
       'Întreținerea vehiculului',
     );
     const counts = Object.fromEntries(items.map((c) => [c.slug, c.postCount]));
-    expect(counts['condus-defensiv']).toBe(2);
+    expect(counts['condus-defensiv']).toBeGreaterThanOrEqual(2);
     expect(counts['siguranta-rutiera']).toBe(1);
     expect(counts['perspectiva-instructorilor']).toBeGreaterThanOrEqual(1);
   });
@@ -173,7 +176,10 @@ describe('Blogs listing (e2e)', () => {
         author: 'E2E',
         excerpt: 'x',
         image: 'https://example.com/x.jpg',
-        content: { blocks: [] },
+        content: {
+          version: 2,
+          blocks: [{ type: 'paragraph', id: 'p', variant: 'body', text: 'x' }],
+        },
         categoryId: cat.id,
         readTimeMinutes: 1,
         publishedAt: new Date(Date.now() + 86_400_000),

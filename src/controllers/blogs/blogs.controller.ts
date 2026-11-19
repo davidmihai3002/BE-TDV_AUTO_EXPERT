@@ -1,12 +1,20 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { Controller, Get, Header, Param, Query } from '@nestjs/common';
+import { z } from 'zod';
 import { ZodValidationPipe } from 'src/common';
 import { BlogsService } from 'src/services';
-import { blogsListingQuerySchema } from 'src/types';
+import { blogDetailSlugSchema, blogsListingQuerySchema } from 'src/types';
 import type {
+  BlogDetailDto,
+  RelatedBlogDto,
   BlogCategoriesResponseDto,
   BlogsListingQuery,
   BlogsListingResponseDto,
 } from 'src/types';
+
+const relatedQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(6).default(3),
+});
+type RelatedQuery = z.infer<typeof relatedQuerySchema>;
 
 @Controller()
 export class BlogsController {
@@ -21,10 +29,27 @@ export class BlogsController {
     return this.blogsService.getBlogsListing(query);
   }
 
-  // Must stay declared before ticket 05's `@Get('/blogs/:slug')`, or "categories" is matched as a slug.
+  // Static routes must stay declared before `/blogs/:slug`, or "categories" is matched as a slug.
   @Get('/blogs/categories')
   @Header('Cache-Control', 'public, max-age=60')
   getCategories(): Promise<BlogCategoriesResponseDto> {
     return this.blogsService.getBlogCategories();
+  }
+
+  @Get('/blogs/:slug')
+  @Header('Cache-Control', 'public, max-age=300, stale-while-revalidate=600')
+  getBlog(
+    @Param('slug', new ZodValidationPipe(blogDetailSlugSchema)) slug: string,
+  ): Promise<BlogDetailDto> {
+    return this.blogsService.getBlogBySlug(slug);
+  }
+
+  @Get('/blogs/:slug/related')
+  @Header('Cache-Control', 'public, max-age=300, stale-while-revalidate=600')
+  getRelated(
+    @Param('slug', new ZodValidationPipe(blogDetailSlugSchema)) slug: string,
+    @Query(new ZodValidationPipe(relatedQuerySchema)) query: RelatedQuery,
+  ): Promise<{ items: RelatedBlogDto[] }> {
+    return this.blogsService.getRelatedBlogs(slug, query.limit);
   }
 }

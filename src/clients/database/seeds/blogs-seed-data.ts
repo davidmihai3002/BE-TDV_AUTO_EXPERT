@@ -1,6 +1,6 @@
 // MOCK DATA — to be replaced (plan §9 D4). Romanian copy (D1), UTF-8, comma-below ș/ț only.
 // Shared by migrations 032/034; ticket 05 imports and extends it (featured slug must stay `dinamica-avansata-in-viraje`).
-import type { BlogContent } from 'src/types/blogs/blogs-table-types';
+import type { LegacyBlogContent as BlogContent } from 'src/types/blogs/blog-content-schema';
 
 export interface BlogCategorySeed {
   slug: string;

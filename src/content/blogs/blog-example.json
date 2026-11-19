@@ -7,36 +7,72 @@
   "imageAlt": "Diagramă a fluxului de date între un fișier JSON, aplicația Node.js și baza de date PostgreSQL",
   "categorySlug": "perspectiva-instructorilor",
   "content": {
+    "version": 2,
     "blocks": [
       {
+        "type": "heading",
         "id": "why-structured-content",
-        "heading": "Why Structured Content Helps",
-        "headingIconName": "blocks",
-        "body": "A blog article can be stored as one long string, but structured content gives an application control. Each section can have its own identifier, heading, icon, and body. The frontend can render those sections consistently while allowing each article to feel different. Structured blocks also make future changes easier. You might later add quotes, images, code examples, or callout sections without redesigning the entire database table. PostgreSQL can keep this document inside a jsonb column, while Kysely describes its TypeScript shape. This creates a useful boundary between flexible article content and strongly defined database fields such as title and slug."
+        "level": 2,
+        "text": "Why Structured Content Helps",
+        "iconName": "view_agenda"
       },
       {
+        "type": "paragraph",
+        "id": "why-structured-content-p1",
+        "variant": "body",
+        "text": "A blog article can be stored as one long string, but structured content gives an application control. Each section can have its own identifier, heading, icon, and body. The frontend can render those sections consistently while allowing each article to feel different. Structured blocks also make future changes easier. You might later add quotes, images, code examples, or callout sections without redesigning the entire database table. PostgreSQL can keep this document inside a jsonb column, while Kysely describes its TypeScript shape. This creates a useful boundary between flexible article content and strongly defined database fields such as title and slug."
+      },
+      {
+        "type": "heading",
         "id": "validating-input",
-        "heading": "Validate Before Inserting",
-        "headingIconName": "shield-check",
-        "body": "Reading a JSON file is straightforward, but parsing it does not prove that its data is correct. JSON.parse only converts text into a JavaScript value. The resulting object could be missing a title, contain a numeric author, or provide blocks without body text. A runtime schema validator can check these requirements before the insert query runs. When validation succeeds, the script receives data with a trustworthy TypeScript type. When it fails, the script can print a precise message and stop safely. This protects the database from malformed test fixtures and makes errors much easier to understand during development and deployment."
+        "level": 2,
+        "text": "Validate Before Inserting",
+        "iconName": "verified_user"
       },
       {
+        "type": "paragraph",
+        "id": "validating-input-p1",
+        "variant": "body",
+        "text": "Reading a JSON file is straightforward, but parsing it does not prove that its data is correct. JSON.parse only converts text into a JavaScript value. The resulting object could be missing a title, contain a numeric author, or provide blocks without body text. A runtime schema validator can check these requirements before the insert query runs. When validation succeeds, the script receives data with a trustworthy TypeScript type. When it fails, the script can print a precise message and stop safely. This protects the database from malformed test fixtures and makes errors much easier to understand during development and deployment."
+      },
+      {
+        "type": "heading",
         "id": "executing-the-query",
-        "heading": "Execute the Insert Query",
-        "headingIconName": "database",
-        "body": "Kysely separates building a query from executing it. Calling insertInto and values creates a typed query description, but PostgreSQL receives nothing until an execution method is called. For an insertion script, returningAll followed by executeTakeFirstOrThrow is convenient. PostgreSQL inserts the row, returns every selected column, and Kysely provides the resulting object. The generated identifier and publication timestamp are included even though the input JSON omits them. If the slug has a unique constraint and another article already uses it, PostgreSQL rejects the insertion. Allowing that error to surface is usually safer than silently replacing an existing article with new content."
+        "level": 2,
+        "text": "Execute the Insert Query",
+        "iconName": "database"
       },
       {
+        "type": "paragraph",
+        "id": "executing-the-query-p1",
+        "variant": "body",
+        "text": "Kysely separates building a query from executing it. Calling insertInto and values creates a typed query description, but PostgreSQL receives nothing until an execution method is called. For an insertion script, returningAll followed by executeTakeFirstOrThrow is convenient. PostgreSQL inserts the row, returns every selected column, and Kysely provides the resulting object. The generated identifier and publication timestamp are included even though the input JSON omits them. If the slug has a unique constraint and another article already uses it, PostgreSQL rejects the insertion. Allowing that error to surface is usually safer than silently replacing an existing article with new content."
+      },
+      {
+        "type": "heading",
         "id": "closing-connections",
-        "heading": "Close the Connection Pool",
-        "headingIconName": "plug",
-        "body": "A standalone script has a shorter lifecycle than the server. It connects, performs one task, reports the result, and exits. The PostgreSQL connection pool can keep Node running after insertion has finished, so the script should close Kysely in a finally handler. A finally handler runs whether the operation succeeds or throws an error. This makes it suitable for cleanup work that must always happen. The catch handler can display a readable failure and set a nonzero process exit code, while finally releases database resources. Together, these steps make the script predictable when it is run manually or by automation."
+        "level": 2,
+        "text": "Close the Connection Pool",
+        "iconName": "power"
       },
       {
+        "type": "paragraph",
+        "id": "closing-connections-p1",
+        "variant": "body",
+        "text": "A standalone script has a shorter lifecycle than the server. It connects, performs one task, reports the result, and exits. The PostgreSQL connection pool can keep Node running after insertion has finished, so the script should close Kysely in a finally handler. A finally handler runs whether the operation succeeds or throws an error. This makes it suitable for cleanup work that must always happen. The catch handler can display a readable failure and set a nonzero process exit code, while finally releases database resources. Together, these steps make the script predictable when it is run manually or by automation."
+      },
+      {
+        "type": "heading",
         "id": "growing-the-workflow",
-        "heading": "Grow the Workflow Carefully",
-        "headingIconName": "sprout",
-        "body": "Once the basic script works, it can support publishing workflows. You could accept a folder and insert several article files transactionally, add a dry run option that validates without writing, or report which slugs already exist. Keep the first version small: one file, one validated article, and one insertion. Small scripts are easier to debug and safer to rerun. The database should remain the final authority for primary keys, defaults, uniqueness, and required columns. TypeScript improves the development experience, validation checks external input, Kysely constructs safe SQL, and PostgreSQL enforces lasting rules. Each layer contributes a different kind of protection."
+        "level": 2,
+        "text": "Grow the Workflow Carefully",
+        "iconName": "eco"
+      },
+      {
+        "type": "paragraph",
+        "id": "growing-the-workflow-p1",
+        "variant": "body",
+        "text": "Once the basic script works, it can support publishing workflows. You could accept a folder and insert several article files transactionally, add a dry run option that validates without writing, or report which slugs already exist. Keep the first version small: one file, one validated article, and one insertion. Small scripts are easier to debug and safer to rerun. The database should remain the final authority for primary keys, defaults, uniqueness, and required columns. TypeScript improves the development experience, validation checks external input, Kysely constructs safe SQL, and PostgreSQL enforces lasting rules. Each layer contributes a different kind of protection."
       }
     ]
   }
