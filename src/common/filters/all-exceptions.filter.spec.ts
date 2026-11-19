@@ -60,12 +60,51 @@ describe('AllExceptionsFilter', () => {
         code: '22P02',
       }),
     );
-    expect(status).toBe(400);
-    expect(body.message).toBe('Invalid input');
+    // an id that slipped past validation can't match a row (ticket 07)
+    expect(status).toBe(404);
+    expect(body.message).toBe('Not Found');
     expect(JSON.stringify(body)).not.toContain('uuid');
-    expect(run(Object.assign(new Error('dup'), { code: '23505' })).status).toBe(
-      409,
+    expect(
+      run(Object.assign(new Error('dup'), { code: '23505' })).body,
+    ).toMatchObject({
+      statusCode: 409,
+      message: 'Resource already exists',
+      error: 'Conflict',
+    });
+  });
+
+  it.each(['ECONNREFUSED', '57P01', '08006'])(
+    'database unavailable (%s) → 503',
+    (code) => {
+      const { status, body } = run(
+        Object.assign(new Error('connect ECONNREFUSED 127.0.0.1:5432'), {
+          code,
+        }),
+      );
+      expect(status).toBe(503);
+      expect(body).toMatchObject({
+        message: 'Service temporarily unavailable',
+        error: 'Service Unavailable',
+      });
+      expect(JSON.stringify(body)).not.toContain('5432');
+    },
+  );
+
+  it('malformed JSON body → 400 "Malformed JSON body"', () => {
+    const parseError = Object.assign(
+      new SyntaxError('Unexpected token } in JSON at position 9'),
+      { body: '{"a":1,}' },
     );
+    expect(run(parseError).body).toMatchObject({
+      statusCode: 400,
+      message: 'Malformed JSON body',
+      error: 'Bad Request',
+    });
+    const wrapped = new BadRequestException(
+      'Unexpected token } in JSON at position 9',
+      { cause: parseError },
+    );
+    expect(run(wrapped).body.message).toBe('Malformed JSON body');
   });
 
   it('hides unknown errors behind a generic 500', () => {
