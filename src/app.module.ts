@@ -6,6 +6,7 @@ import {
   DatabaseModule,
   FleetModule,
   HealthModule,
+  LandingModule,
   PricingModule,
   SiteSettingsModule,
 } from './modules';
@@ -18,6 +19,7 @@ import {
     DatabaseModule,
     HealthModule,
     SiteSettingsModule,
+    LandingModule,
     BlogsModule,
     FleetModule,
     PricingModule,

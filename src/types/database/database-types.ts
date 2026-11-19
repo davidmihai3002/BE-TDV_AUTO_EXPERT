@@ -6,8 +6,13 @@ import {
   BlogTagsTable,
   BlogsTable,
   BookingsTable,
+  FaqsTable,
   FleetTable,
   InstructorsTable,
+  LandingFeaturesTable,
+  LandingFleetHighlightsTable,
+  LandingSectionsTable,
+  LandingStatsTable,
   LicenseCategoriesTable,
   PricingSettingsTable,
   PricingVehicleRatesTable,
@@ -23,8 +28,13 @@ export interface Database {
   blogCategories: BlogCategoriesTable;
   blogs: BlogsTable;
   bookings: BookingsTable;
+  faqs: FaqsTable;
   fleet: FleetTable;
   instructors: InstructorsTable;
+  landingFeatures: LandingFeaturesTable;
+  landingFleetHighlights: LandingFleetHighlightsTable;
+  landingSections: LandingSectionsTable;
+  landingStats: LandingStatsTable;
   licenseCategories: LicenseCategoriesTable;
   pricingSettings: PricingSettingsTable;
   pricingVehicleRates: PricingVehicleRatesTable;
