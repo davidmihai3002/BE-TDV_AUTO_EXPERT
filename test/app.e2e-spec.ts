@@ -47,7 +47,7 @@ describe('Foundation (e2e)', () => {
 
   it('GET /fleet → camelCase keys and numbers', async () => {
     const res = await request(app.getHttpServer()).get('/fleet').expect(200);
-    const [first] = res.body as Record<string, unknown>[];
+    const [first] = (res.body as { items: Record<string, unknown>[] }).items;
     expect(first).toHaveProperty('imageUrl');
     expect(first).not.toHaveProperty('imageURL');
     expect(typeof first.successRate).toBe('number');

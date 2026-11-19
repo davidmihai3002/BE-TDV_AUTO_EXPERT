@@ -1,10 +1,16 @@
 import { ColumnType } from 'kysely';
-import { BlogsTable, FleetTable, SiteSettingsTable } from '..';
+import {
+  BlogsTable,
+  FleetTable,
+  InstructorsTable,
+  SiteSettingsTable,
+} from '..';
 
 // Keys are camelCase: CamelCasePlugin maps them to snake_case tables/columns (siteSettings → site_settings).
 export interface Database {
   blogs: BlogsTable;
   fleet: FleetTable;
+  instructors: InstructorsTable;
   siteSettings: SiteSettingsTable;
 }
 

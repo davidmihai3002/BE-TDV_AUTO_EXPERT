@@ -1,4 +1,5 @@
-import { ImmutableGenerated } from '../database';
+import { Generated } from 'kysely';
+import { ImmutableGenerated, Timestamp } from '../database';
 
 export enum TransmissionType {
   Manual = 'manual',
@@ -6,21 +7,49 @@ export enum TransmissionType {
 }
 
 export enum FuelType {
-  Hybrid = 'hybrid',
   Petrol = 'petrol',
   Diesel = 'diesel',
+  Hybrid = 'hybrid',
   Electric = 'electric',
 }
 
+/** Training level (drives the card badge and the `category` filter). Not the license category (`B`). */
+export enum CarCategory {
+  Beginner = 'beginner',
+  Fundamentals = 'fundamentals',
+  Advanced = 'advanced',
+  Mastery = 'mastery',
+}
+
+export enum BodyType {
+  Compact = 'compact',
+  Hatchback = 'hatchback',
+  Sedan = 'sedan',
+  Coupe = 'coupe',
+  Suv = 'suv',
+}
+
+// numeric columns are numbers thanks to the pg type parser registered in database.ts
 export interface FleetTable {
   id: ImmutableGenerated<string>;
+  slug: string;
   carName: string;
+  series: string | null;
+  category: CarCategory;
+  badgeLabel: string | null;
   transmission: TransmissionType;
+  transmissionLabel: string | null;
   fuel: FuelType;
-  // `imageURL` would map to image_u_r_l under CamelCasePlugin; the column is image_url (migration 004)
+  bodyType: BodyType | null;
+  horsepower: number | null;
+  zeroToHundredSeconds: number | null;
   imageUrl: string;
-  successRate: number;
-  averageGrade: number;
-  instructorName: string;
-  instructorPhoneNumber: string;
+  imageAlt: Generated<string>;
+  successRate: number | null;
+  averageGrade: number | null;
+  instructorId: string | null;
+  displayOrder: Generated<number>;
+  isActive: Generated<boolean>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
