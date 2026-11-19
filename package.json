@@ -20,6 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "insert-local:blog": "node --env-file=.env.local --import tsx ./src/scripts/insert-blog.ts",
+    "recompute-local:blog-read-times": "node --env-file=.env.local --import tsx ./src/scripts/recompute-blog-read-times.ts",
     "migrate:local": "node --env-file=.env.local --import tsx ./src/clients/database/migrate.ts",
     "migrate:local:down": "node --env-file=.env.local --import tsx ./src/clients/database/migrate.ts --down",
     "test:e2e:local": "node --env-file=.env.local node_modules/.bin/jest --config ./test/jest-e2e.json --runInBand"

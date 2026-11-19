@@ -96,3 +96,26 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Blog posts
+
+Posts are added with a script (there is no admin UI yet):
+
+```bash
+npm run insert-local:blog -- ./src/content/blogs/blog-example-1.json
+```
+
+JSON fields: `title`, `slug` (ASCII kebab-case), `author`, `excerpt`, `image` (URL), `imageAlt` (Romanian),
+`categorySlug` (one of the `blog_categories` slugs), `content.blocks[]` (`id`, `heading`, `headingIconName`, `body`),
+optional `isFeatured` (default `false`; featuring a post un-features the previous one) and `publishedAt`
+(ISO datetime; a future date schedules the post). The read time is computed from the content (200 words/minute).
+
+After editing post content directly in the database, recompute the stored read times with:
+
+```bash
+npm run recompute-local:blog-read-times
+```
+
+`GET /blogs` is the paginated listing (no `content`): `page`, `pageSize` (or `limit`, max 24), `category`,
+`search` (diacritics-insensitive), `featured`, `sort=newest|oldest`. `GET /blogs/categories` returns the categories
+with post counts.
