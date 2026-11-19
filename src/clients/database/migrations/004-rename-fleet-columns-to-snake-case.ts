@@ -1,0 +1,24 @@
+import { Kysely } from 'kysely';
+
+// Migrations run without CamelCasePlugin: always use snake_case identifiers here.
+// `down` runs in reverse order, so this restores camelCase before 003.down (which uses "carName") runs.
+const RENAMES: [from: string, to: string][] = [
+  ['carName', 'car_name'],
+  ['imageURL', 'image_url'],
+  ['successRate', 'success_rate'],
+  ['averageGrade', 'average_grade'],
+  ['instructorName', 'instructor_name'],
+  ['instructorPhoneNumber', 'instructor_phone_number'],
+];
+
+export async function up(db: Kysely<any>): Promise<void> {
+  for (const [from, to] of RENAMES) {
+    await db.schema.alterTable('fleet').renameColumn(from, to).execute();
+  }
+}
+
+export async function down(db: Kysely<any>): Promise<void> {
+  for (const [from, to] of RENAMES) {
+    await db.schema.alterTable('fleet').renameColumn(to, from).execute();
+  }
+}

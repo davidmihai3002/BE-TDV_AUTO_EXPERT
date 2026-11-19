@@ -17,7 +17,8 @@ export interface FleetTable {
   carName: string;
   transmission: TransmissionType;
   fuel: FuelType;
-  imageURL: string;
+  // `imageURL` would map to image_u_r_l under CamelCasePlugin; the column is image_url (migration 004)
+  imageUrl: string;
   successRate: number;
   averageGrade: number;
   instructorName: string;

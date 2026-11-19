@@ -1,5 +1,5 @@
 import { JSONColumnType } from 'kysely';
-import { ImmutableGenerated } from '..';
+import { ImmutableGenerated, Timestamp } from '../database';
 
 interface BlogContentBlock {
   id: string;
@@ -20,5 +20,6 @@ export interface BlogsTable {
   content: JSONColumnType<BlogContent, BlogContent, never>;
   excerpt: string;
   image: string;
-  publishedAt: ImmutableGenerated<Date>;
+  // column published_at, mapped by CamelCasePlugin
+  publishedAt: Timestamp;
 }
