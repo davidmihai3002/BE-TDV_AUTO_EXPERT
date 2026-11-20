@@ -1,9 +1,7 @@
-// MOCK DATA — to be replaced (plan §9 D4). Rows live in ../seeds/blogs-seed-data.ts so ticket 05 can extend them.
 import { Kysely, sql } from 'kysely';
 import { BLOGS_SEED } from '../seeds/blogs-seed-data';
 
 export async function up(db: Kysely<any>): Promise<void> {
-  // The Migrator runs each migration in a transaction, so un-featuring + insert is atomic.
   if (BLOGS_SEED.some((b) => b.isFeatured)) {
     await db
       .updateTable('blogs')

@@ -10,12 +10,10 @@ import type {
 import type { BlogsListingQuery, Paginated } from 'src/types';
 import { db } from '../database';
 
-/** `%`, `_` and `\` are LIKE wildcards/escape (Postgres' default escape char is `\`). */
 const escapeLike = (term: string) => term.replace(/[\\%_]/g, (c) => `\\${c}`);
 
 @Injectable()
 export class BlogsOperations {
-  /** Listing projection only: `content` is never selected. Scheduled posts (future published_at) are hidden. */
   listBlogs(query: BlogsListingQuery): Promise<Paginated<BlogListRow>> {
     let qb = db
       .selectFrom('blogs')
@@ -65,7 +63,6 @@ export class BlogsOperations {
     return paginate(page, { page: query.page, pageSize: query.pageSize });
   }
 
-  /** All categories in sort order with their published post counts (zero-count categories included). */
   listCategoriesWithCounts() {
     return db
       .selectFrom('blogCategories as c')
@@ -86,7 +83,6 @@ export class BlogsOperations {
       .execute();
   }
 
-  /** Published post by slug with author + category. Never selects `excerpt` (only as the SEO fallback). */
   getPublishedBlogBySlug(
     slug: string,
   ): Promise<
@@ -147,13 +143,11 @@ export class BlogsOperations {
       .execute();
   }
 
-  /** Same category first, then most shared tags, then newest; excludes self and scheduled posts. */
   getRelatedBlogs(
     current: { id: string; categoryId: string | null },
     tagIds: string[],
     limit: number,
   ): Promise<RelatedBlogRow[]> {
-    // never matches: keeps the join valid when the current post has no tags
     const ids = tagIds.length
       ? tagIds
       : ['00000000-0000-0000-0000-000000000000'];

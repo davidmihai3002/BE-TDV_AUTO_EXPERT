@@ -5,7 +5,6 @@ import { BookingStatus, BookingsTable } from 'src/types';
 
 @Injectable()
 export class BookingsOperations {
-  /** Active car + its instructor id if that instructor is active (snapshotted on the booking). */
   getBookableCar(
     fleetId: string,
   ): Promise<{ id: string; instructorId: string | null } | undefined> {

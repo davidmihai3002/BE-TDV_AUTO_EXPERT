@@ -19,11 +19,8 @@ interface ListBody {
 
 const SEED_SLUGS = BLOGS_SEED.map((b) => b.slug);
 const FEATURED = 'dinamica-avansata-in-viraje';
-// non-featured seed posts in published_at DESC order (desktop cards 1–4, then mobile rows)
 const GRID = SEED_SLUGS.filter((s) => s !== FEATURED);
 
-// Needs the local DB with migrations 030–035 applied: npm run test:e2e:local
-// Tolerates extra (non-seed) blogs a developer inserted locally: exact counts use seed-only filters.
 describe('Blogs listing (e2e)', () => {
   let app: NestExpressApplication;
   let extraBlogs = 0;
@@ -83,7 +80,6 @@ describe('Blogs listing (e2e)', () => {
   });
 
   it('category filter; unknown category → empty 200', async () => {
-    // ticket 05 adds a related stub to this category, so compare the 04 seed posts only
     const body = await list('?category=condus-defensiv');
     expect(seedOnly(body)).toEqual([
       'condusul-pe-timp-de-noapte-scanarea-vizuala',

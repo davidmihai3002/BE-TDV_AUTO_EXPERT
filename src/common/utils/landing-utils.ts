@@ -17,10 +17,6 @@ const TRANSMISSION_ORDER: TransmissionType[] = [
   'automatic',
 ] as TransmissionType[];
 
-/**
- * Card copy + live numbers: sums 06's active cars whose body type the highlight covers, derives the transmission
- * badge. Returns null when no car matches (never advertise a car type the school doesn't have).
- */
 export function toFleetHighlightDto(
   row: Omit<
     Selectable<LandingFleetHighlightsTable>,
@@ -49,7 +45,6 @@ export function toFleetHighlightDto(
       : autoOnly
         ? 'Doar automat'
         : 'Doar manual',
-    // mobile design: gold when manual is available, blue for automatic-only
     badgeVariantMobile: autoOnly ? 'secondary' : 'primary',
     imageUrl: row.imageUrl,
     imageAlt: row.imageAlt,

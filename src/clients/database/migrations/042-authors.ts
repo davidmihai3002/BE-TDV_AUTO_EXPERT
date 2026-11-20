@@ -11,13 +11,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('role', 'text')
     .addColumn('avatar_url', 'text')
     .addColumn('avatar_alt', 'text', (c) => c.notNull().defaultTo(''))
-    .addColumn('bio', 'text') // not rendered by this design; returned for a future author box
+    .addColumn('bio', 'text')
     .addColumn('created_at', 'timestamptz', (c) =>
       c.notNull().defaultTo(sql`now()`),
     )
     .execute();
 
-  // blogs.author (text) stays for the listing; deprecated, to be dropped in a cleanup ticket
   await db.schema
     .alterTable('blogs')
     .addColumn('author_id', 'uuid', (c) =>
@@ -30,7 +29,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .column('author_id')
     .execute();
 
-  // one author per distinct legacy name; strip Romanian diacritics first so slugs are ASCII
   await sql`
     INSERT INTO authors (slug, name)
     SELECT DISTINCT trim(BOTH '-' FROM regexp_replace(

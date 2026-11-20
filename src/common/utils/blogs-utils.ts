@@ -11,18 +11,12 @@ import type {
   RelatedBlogDto,
 } from 'src/types';
 
-/**
- * Silent-reading speed used for read times. Romanian words are longer on average than English ones (inflection,
- * enclitic articles), so ~200 wpm is the conservative end. Single source: ticket 05 imports it.
- */
 export const WORDS_PER_MINUTE = 200;
 
-/** Whitespace word count; hyphenated clitics ("într-o", "s-a") count as one word. */
 export function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-/** Every piece of reader-visible text in a block. */
 export function extractBlockText(block: ContentBlock): string[] {
   switch (block.type) {
     case 'paragraph':
@@ -47,7 +41,6 @@ export function countContentWords(content: BlogContentV2): number {
   return countWords(content.blocks.flatMap(extractBlockText).join(' '));
 }
 
-/** All block text at 200 wpm, rounded up, minimum 1 minute. Returns a number. */
 export function computeReadTimeMinutes(content: BlogContentV2): number {
   return Math.max(1, Math.ceil(countContentWords(content) / WORDS_PER_MINUTE));
 }
@@ -64,7 +57,6 @@ export interface BlogImageRow {
 
 const logger = new Logger('BlogsUtils');
 
-/** Embeds `image` into figure blocks; drops figures whose key has no image (logged). */
 export function hydrateFigures(
   blocks: ContentBlock[],
   images: BlogImageRow[],
@@ -107,7 +99,6 @@ export interface BlogDetailRow {
   updatedAt: Date;
   readTimeMinutes: number;
   seoTitle: string | null;
-  /** coalesce(seo_description, excerpt), resolved in SQL */
   seoDescription: string;
   legacyAuthor: string;
   categorySlug: string | null;
@@ -167,8 +158,7 @@ export function buildBlogDetailDto(args: {
           avatarAlt: row.authorAvatarAlt ?? '',
           bio: row.authorBio,
         }
-      : // legacy row without an authors entry
-        {
+      : {
           slug: '',
           name: row.legacyAuthor,
           role: null,
@@ -207,7 +197,6 @@ export function buildBlogDetailDto(args: {
   };
 }
 
-/** Flat row from BlogsOperations.listBlogs (category columns aliased). */
 export interface BlogListRow {
   id: string;
   slug: string;

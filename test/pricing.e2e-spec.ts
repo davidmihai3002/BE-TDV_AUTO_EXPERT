@@ -20,7 +20,6 @@ interface Options {
   vehicles: Vehicle[];
 }
 
-// Needs the local DB with migrations 020–022 + 054 applied: npm run test:e2e:local
 describe('Pricing (e2e)', () => {
   let app: NestExpressApplication;
   let options: Options;

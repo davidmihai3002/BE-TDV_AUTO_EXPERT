@@ -9,13 +9,10 @@ import {
 import type { Request, Response } from 'express';
 import { ApiErrorBody, ApiIssue } from 'src/types';
 
-/** Postgres / driver error codes → HTTP (ticket 07 §6.3). Messages are fixed: SQL and driver text never leak. */
 const PG_ERRORS: Record<string, { status: HttpStatus; message: string }> = {
-  // invalid text representation: an id that slipped past validation can't match any row
   '22P02': { status: HttpStatus.NOT_FOUND, message: 'Not Found' },
   '23505': { status: HttpStatus.CONFLICT, message: 'Resource already exists' },
   '23503': { status: HttpStatus.CONFLICT, message: 'Conflict' },
-  // database unavailable
   '57P01': {
     status: HttpStatus.SERVICE_UNAVAILABLE,
     message: 'Service temporarily unavailable',
@@ -43,7 +40,6 @@ function isPgError(e: unknown): e is { code: string; message: string } {
   );
 }
 
-/** body-parser's error for an unparseable JSON body (surfaced by Nest as a 400 or a raw SyntaxError). */
 function isMalformedJson(e: unknown): boolean {
   if (e instanceof SyntaxError && 'body' in e) return true;
   if (e instanceof HttpException && e.getStatus() === 400) {
@@ -53,7 +49,6 @@ function isMalformedJson(e: unknown): boolean {
   return false;
 }
 
-/** Normalises every error to `{ statusCode, message, error, path, timestamp, issues? }`. Never leaks SQL or stacks. */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger('Exceptions');

@@ -6,7 +6,6 @@ import { PricingService } from 'src/services';
 @Module({
   providers: [PricingService, PricingOperations],
   controllers: [PricingController],
-  // 06's BookingsModule computes `quoted_total` with it
   exports: [PricingService],
 })
 export class PricingModule {}

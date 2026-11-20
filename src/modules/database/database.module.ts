@@ -13,7 +13,6 @@ class DatabaseLifecycle implements OnApplicationShutdown {
   }
 }
 
-/** Closes the pg pool on shutdown (requires app.enableShutdownHooks()). */
 @Global()
 @Module({ providers: [DatabaseLifecycle] })
 export class DatabaseModule {}

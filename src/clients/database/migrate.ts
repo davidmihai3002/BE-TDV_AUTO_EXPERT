@@ -7,16 +7,13 @@ import { Pool } from 'pg';
 
 import { getDatabaseConfig } from './database-config';
 
-/** `--down` rolls back exactly one migration; otherwise migrates to latest. */
 async function migrate(direction: 'up' | 'down'): Promise<void> {
-  // No CamelCasePlugin here: migrations use snake_case identifiers.
   const db = new Kysely<any>({
     dialect: new PostgresDialect({ pool: new Pool(getDatabaseConfig()) }),
   });
 
   const migrator = new Migrator({
     db,
-    // Tickets merge in dependency order (01 → 04 → 05 → 06 → 03 → 02 → 07), not numeric order (plan §8).
     allowUnorderedMigrations: true,
 
     provider: new FileMigrationProvider({

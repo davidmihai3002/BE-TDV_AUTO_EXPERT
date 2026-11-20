@@ -3,7 +3,6 @@ import request from 'supertest';
 import { FleetOperations } from 'src/clients';
 import { createE2eApp } from './e2e-app';
 
-// Error contract for every endpoint (ticket 07 §6.3). Needs the local DB: npm run test:e2e:local
 describe('Error envelope (e2e)', () => {
   let app: NestExpressApplication;
   const server = () => app.getHttpServer();

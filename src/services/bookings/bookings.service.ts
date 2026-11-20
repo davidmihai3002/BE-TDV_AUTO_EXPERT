@@ -8,10 +8,8 @@ import { BookingsOperations } from 'src/clients';
 import { CreateBookingDto, CreateBookingResponseDto } from 'src/types';
 import { PricingService } from '../pricing';
 
-/** Only license category seeded by 03; used when lessons are requested without a category. */
 export const DEFAULT_LICENSE_CATEGORY = 'B';
 
-/** Re-raises a pricing 400 as a field error on `lessonsCount` (same shape as the zod pipe's errors). */
 function withIssuePath(
   e: BadRequestException,
   path: string,
@@ -50,7 +48,6 @@ export class BookingsService {
       dto.licenseCategory ??
       (dto.lessonsCount != null ? DEFAULT_LICENSE_CATEGORY : undefined);
 
-    // The server recomputes the price; a client-sent total is rejected by the strict schema.
     let quotedTotal: number | null = null;
     if (dto.lessonsCount != null) {
       try {
@@ -61,7 +58,6 @@ export class BookingsService {
         });
         quotedTotal = quote.total;
       } catch (e) {
-        // range/step/unknown category → field error; a car without a rate is still bookable (no price)
         if (e instanceof BadRequestException)
           throw withIssuePath(e, 'lessonsCount');
         if (e instanceof NotFoundException) {

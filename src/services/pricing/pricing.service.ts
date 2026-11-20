@@ -17,11 +17,6 @@ import type {
   QuoteSelection,
 } from 'src/types';
 
-/**
- * Single implementation of the price formula (rate × lessons + processing fee). Exported by PricingModule so
- * 06's POST /bookings stores a server-computed `quoted_total`; the client never sends a price.
- * Error messages are Romanian (the FE may surface them).
- */
 @Injectable()
 export class PricingService {
   private readonly logger = new Logger(PricingService.name);
@@ -44,7 +39,6 @@ export class PricingService {
       this.pricingOperations.getOptionVehicleRates(),
     ]);
 
-    // one vehicle per car, with all its category prices (rows are ordered by display order, then category)
     const byId = new Map<string, PricingVehicleDto>();
     for (const r of rates) {
       const price = Number(r.lessonPrice);

@@ -6,7 +6,6 @@ export interface BlogCategoryRefDto {
   name: string;
 }
 
-/** Listing projection: never includes `content`. */
 export interface BlogListItemDto {
   id: string;
   slug: string;
@@ -56,7 +55,6 @@ export interface BlogImageDto extends BlogImageRefDto {
   position: number;
 }
 
-/** Figure blocks carry the resolved image so the FE never has to join. */
 export type HydratedContentBlock =
   | Exclude<ContentBlock, { type: 'figure' }>
   | (FigureBlock & { image: BlogImageRefDto });
@@ -71,7 +69,6 @@ export interface RelatedBlogDto {
   publishedAt: string;
 }
 
-/** GET /blogs/:slug. Never contains a top-level `excerpt` (it's only an SEO fallback). */
 export interface BlogDetailDto {
   id: string;
   slug: string;

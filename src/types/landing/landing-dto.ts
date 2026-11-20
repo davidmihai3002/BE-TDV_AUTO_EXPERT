@@ -89,7 +89,6 @@ export const faqSchema = z.object({
   answer: z.string(),
 });
 
-/** GET /landing. Used to validate the service output in tests (not at runtime). */
 export const landingResponseSchema = z.object({
   sections: z.partialRecord(sectionKeySchema, landingSectionSchema),
   stats: z.array(statSchema),

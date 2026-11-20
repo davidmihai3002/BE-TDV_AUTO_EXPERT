@@ -1,7 +1,6 @@
 import { ColumnType, Generated } from 'kysely';
 import { ImmutableGenerated, Timestamp } from '../database';
 
-/** numeric(10,2) columns: read as number (pg type parser), written as number or string. */
 type Money = ColumnType<number, number | string, number | string>;
 
 export interface LicenseCategoriesTable {

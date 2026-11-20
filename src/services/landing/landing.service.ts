@@ -12,7 +12,6 @@ import type {
 export class LandingService {
   constructor(private readonly landingOperations: LandingOperations) {}
 
-  /** One round trip for all landing CMS content; blogs come from GET /blogs (04) so a blog failure can't blank the page. */
   async getLanding(): Promise<LandingResponseDto> {
     const [sections, stats, features, highlights, counts, faqs] =
       await Promise.all([

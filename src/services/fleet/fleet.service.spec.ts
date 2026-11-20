@@ -1,4 +1,3 @@
-// Unit tests: no DB. Operations are mocked; the real module would open a pg pool (and kysely is ESM-only).
 jest.mock('src/clients', () => ({}));
 
 import { NotFoundException } from '@nestjs/common';

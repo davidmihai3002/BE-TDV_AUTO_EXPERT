@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// content.blocks[].imageKey → blog_images.key can't be an FK; the insert script and the seed enforce it.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('blog_images')
@@ -13,7 +12,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('key', 'text', (c) => c.notNull())
     .addColumn('url', 'text', (c) => c.notNull())
     .addColumn('alt', 'text', (c) => c.notNull())
-    .addColumn('caption', 'text') // default caption; a figure block's caption overrides it
+    .addColumn('caption', 'text')
     .addColumn('width', 'integer')
     .addColumn('height', 'integer')
     .addColumn('position', 'smallint', (c) => c.notNull().defaultTo(0))

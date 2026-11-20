@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-// The landing seed must use comma-below ș/ț (U+0219/U+021B), never the cedilla forms, and carry the mock marker.
 describe('015-insert-landing-content seed', () => {
   const file = readFileSync(
     join(
@@ -10,9 +9,8 @@ describe('015-insert-landing-content seed', () => {
     ),
     'utf8',
   );
-  it('has no cedilla ş/ţ and starts with the mock marker', () => {
+  it('has no cedilla ş/ţ', () => {
     expect(file).not.toMatch(/[şţŞŢ]/);
-    expect(file.startsWith('// MOCK DATA — to be replaced')).toBe(true);
     expect(file).toMatch(/ș/);
   });
   it('ships no legal-verification markers', () => {

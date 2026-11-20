@@ -1,8 +1,6 @@
 import { Kysely, sql } from 'kysely';
 
-// Existing rows (e.g. the src/content/blogs fixtures inserted locally). Production has no blogs yet.
 export async function up(db: Kysely<any>): Promise<void> {
-  // word-based read time, 200 wpm, min 1 (same formula as BlogsUtils.computeReadTimeMinutes)
   await sql`
     UPDATE blogs b SET read_time_minutes = GREATEST(1, CEIL(words.cnt / 200.0))::int
     FROM (
@@ -25,7 +23,6 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  // the data backfill is not reverted
   await sql`ALTER TABLE blogs ALTER COLUMN category_id DROP NOT NULL`.execute(
     db,
   );

@@ -20,7 +20,6 @@ import {
   TagsTable,
 } from '..';
 
-// Keys are camelCase: CamelCasePlugin maps them to snake_case tables/columns (siteSettings → site_settings).
 export interface Database {
   authors: AuthorsTable;
   blogImages: BlogImagesTable;
@@ -44,5 +43,4 @@ export interface Database {
 
 export type ImmutableGenerated<T> = ColumnType<T, T | undefined, never>;
 
-/** timestamptz with a DB default: read as Date, optional on insert, not updatable by hand. */
 export type Timestamp = ColumnType<Date, Date | string | undefined, never>;

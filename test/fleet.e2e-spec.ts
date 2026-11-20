@@ -28,7 +28,6 @@ const ALL_SLUGS = [
   'tesla-model-3',
 ];
 
-// Needs the local DB with migrations 050–053 applied: npm run test:e2e:local
 describe('Fleet (e2e)', () => {
   let app: NestExpressApplication;
   const get = (url: string) => request(app.getHttpServer()).get(url);

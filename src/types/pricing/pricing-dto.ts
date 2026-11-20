@@ -1,14 +1,13 @@
 import { z } from 'zod';
 import { FuelType, TransmissionType } from '../fleet/fleet-table-types';
 
-/** POST /pricing/quote body. `.strict()`: a client-sent `total` is rejected (the server computes prices). */
 export const quoteSelectionSchema = z
   .object({
     categoryCode: z.string().trim().min(1).max(8),
     vehicleId: z.uuid(),
     lessons: z.number().int(),
-    transmission: z.enum(TransmissionType).optional(), // if sent, must match the vehicle
-    fuel: z.enum(FuelType).optional(), // if sent, must match the vehicle
+    transmission: z.enum(TransmissionType).optional(),
+    fuel: z.enum(FuelType).optional(),
   })
   .strict();
 export type QuoteSelection = z.infer<typeof quoteSelectionSchema>;
@@ -35,7 +34,6 @@ export interface PricingVehicleDto {
   successRate: number | null;
   averageGrade: number | null;
   categoryCodes: string[];
-  /** price in the first category (v1 has only B); use pricesByCategory for the selected one */
   lessonPrice: number;
   pricesByCategory: Record<string, number>;
 }

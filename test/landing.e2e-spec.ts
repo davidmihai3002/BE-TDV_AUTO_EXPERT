@@ -18,7 +18,6 @@ interface Landing {
   faqs: { question: string; answer: string }[];
 }
 
-// Needs the local DB with migrations 010–015 (+ 06's fleet) applied: npm run test:e2e:local
 describe('Landing (e2e)', () => {
   let app: NestExpressApplication;
   const landing = async () =>

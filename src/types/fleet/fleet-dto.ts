@@ -6,7 +6,6 @@ import {
   TransmissionType,
 } from './fleet-table-types';
 
-/** Accepts `?x=a,b`, `?x=a&x=b` or a single value; each item validated against `item`. */
 const csv = <T extends z.ZodType>(item: T) =>
   z
     .preprocess(
@@ -26,7 +25,6 @@ const csv = <T extends z.ZodType>(item: T) =>
     )
     .optional();
 
-// z.object strips unknown keys (ticket: "unknown query keys are stripped")
 export const getFleetQuerySchema = z.object({
   transmission: csv(z.enum(TransmissionType)),
   fuel: csv(z.enum(FuelType)),

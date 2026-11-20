@@ -1,7 +1,5 @@
 import { Kysely } from 'kysely';
 
-// Migrations run without CamelCasePlugin: always use snake_case identifiers here.
-// `down` runs in reverse order, so this restores camelCase before 003.down (which uses "carName") runs.
 const RENAMES: [from: string, to: string][] = [
   ['carName', 'car_name'],
   ['imageURL', 'image_url'],

@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Single-row table: id is fixed to 1.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('site_settings')

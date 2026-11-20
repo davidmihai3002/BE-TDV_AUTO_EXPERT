@@ -6,7 +6,6 @@ import { db } from 'src/clients';
 import { AppModule } from './../src/app.module';
 import { paginate } from 'src/common';
 
-// Needs the local DB with migrations applied: npm run test:e2e:local
 describe('Foundation (e2e)', () => {
   let app: INestApplication<App>;
 

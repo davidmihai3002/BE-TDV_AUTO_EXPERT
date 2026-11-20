@@ -6,9 +6,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'uuid', (c) =>
       c.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
-    .addColumn('code', 'text', (c) => c.notNull().unique()) // 'B'
-    .addColumn('name', 'text', (c) => c.notNull()) // desktop title
-    .addColumn('short_name', 'text', (c) => c.notNull()) // mobile label
+    .addColumn('code', 'text', (c) => c.notNull().unique())
+    .addColumn('name', 'text', (c) => c.notNull())
+    .addColumn('short_name', 'text', (c) => c.notNull())
     .addColumn('description', 'text', (c) => c.notNull())
     .addColumn('badge_label', 'text')
     .addColumn('icon', 'text', (c) => c.notNull().defaultTo('directions_car'))

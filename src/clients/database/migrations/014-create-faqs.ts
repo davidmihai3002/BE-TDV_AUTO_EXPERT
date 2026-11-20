@@ -7,8 +7,8 @@ export async function up(db: Kysely<any>): Promise<void> {
       c.primaryKey().defaultTo(sql`gen_random_uuid()`),
     )
     .addColumn('question', 'text', (c) => c.notNull())
-    .addColumn('answer', 'text', (c) => c.notNull()) // plain text, no HTML
-    .addColumn('page', 'text', (c) => c.notNull().defaultTo('landing')) // future reuse: 'pricing', ...
+    .addColumn('answer', 'text', (c) => c.notNull())
+    .addColumn('page', 'text', (c) => c.notNull().defaultTo('landing'))
     .addColumn('sort_order', 'integer', (c) => c.notNull().defaultTo(0))
     .addColumn('is_published', 'boolean', (c) => c.notNull().defaultTo(true))
     .addColumn('created_at', 'timestamptz', (c) =>

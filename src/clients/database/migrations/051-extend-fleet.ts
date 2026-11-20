@@ -1,9 +1,6 @@
 import { Kysely, sql } from 'kysely';
 
-// Extends fleet with the columns the design needs and moves instructors into their own table (ticket 06 §6.1).
-// Existing rows survive: new columns are nullable/defaulted first, then backfilled and constrained.
 export async function up(db: Kysely<any>): Promise<void> {
-  // 1. new columns
   await db.schema
     .alterTable('fleet')
     .addColumn('slug', 'text')
@@ -28,7 +25,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .execute();
 
-  // 2. backfill slug from car_name, then enforce
   await sql`UPDATE fleet SET slug = trim(both '-' from regexp_replace(lower(car_name), '[^a-z0-9]+', '-', 'g'))`.execute(
     db,
   );
@@ -37,7 +33,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     db,
   );
 
-  // 3. move instructors out (phone normalised to E.164 by stripping whitespace)
   await sql`
     INSERT INTO instructors (full_name, phone_number)
     SELECT DISTINCT ON (regexp_replace(instructor_phone_number, '\\s', '', 'g'))
@@ -56,7 +51,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .dropColumn('instructor_phone_number')
     .execute();
 
-  // 4. numeric precision + nullability + checks
   await sql`ALTER TABLE fleet
     ALTER COLUMN success_rate TYPE numeric(5,2), ALTER COLUMN success_rate DROP NOT NULL,
     ALTER COLUMN average_grade TYPE numeric(4,2), ALTER COLUMN average_grade DROP NOT NULL,
@@ -72,7 +66,6 @@ export async function up(db: Kysely<any>): Promise<void> {
   );
   await sql`ALTER TABLE fleet ALTER COLUMN category DROP DEFAULT`.execute(db);
 
-  // 5. indexes for listing + filters
   await db.schema
     .createIndex('fleet_active_order_idx')
     .on('fleet')
@@ -94,7 +87,6 @@ export async function up(db: Kysely<any>): Promise<void> {
 export async function down(db: Kysely<any>): Promise<void> {
   await sql`DROP TRIGGER IF EXISTS fleet_set_updated_at ON fleet`.execute(db);
 
-  // re-add flat instructor columns and copy them back (reverse order of up)
   await db.schema
     .alterTable('fleet')
     .addColumn('instructor_name', 'text')

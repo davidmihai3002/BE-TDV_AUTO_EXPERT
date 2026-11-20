@@ -16,7 +16,6 @@ export interface DatabaseConfig {
   password: string;
 }
 
-/** Reads and validates the LOCAL_DB_* variables. Shared by the runtime client and the migration script. */
 export function getDatabaseConfig(
   env: NodeJS.ProcessEnv = process.env,
 ): DatabaseConfig {

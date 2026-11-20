@@ -18,7 +18,6 @@ function run(exception: unknown): { status: number; body: ApiErrorBody } {
     }),
   } as unknown as ArgumentsHost;
   const filter = new AllExceptionsFilter();
-  // keep test output clean
   jest.spyOn(filter['logger'], 'error').mockImplementation(() => undefined);
   jest.spyOn(filter['logger'], 'warn').mockImplementation(() => undefined);
   filter.catch(exception, host);
@@ -60,7 +59,6 @@ describe('AllExceptionsFilter', () => {
         code: '22P02',
       }),
     );
-    // an id that slipped past validation can't match a row (ticket 07)
     expect(status).toBe(404);
     expect(body.message).toBe('Not Found');
     expect(JSON.stringify(body)).not.toContain('uuid');

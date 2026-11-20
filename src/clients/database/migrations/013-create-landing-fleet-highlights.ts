@@ -1,7 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Marketing copy for a group of 06 body types. Not a car category and nothing references it:
-// car counts and the transmission badge are computed from `fleet` at read time.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('landing_fleet_highlights')
@@ -10,12 +8,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn('slug', 'text', (c) => c.notNull().unique())
     .addColumn('name', 'text', (c) => c.notNull())
-    .addColumn('tagline', 'text', (c) => c.notNull()) // desktop short line
-    .addColumn('description', 'text', (c) => c.notNull()) // mobile long text
+    .addColumn('tagline', 'text', (c) => c.notNull())
+    .addColumn('description', 'text', (c) => c.notNull())
     .addColumn('body_types', sql`text[]`, (c) =>
       c
         .notNull()
-        // must match 06's fleet_body_type_check
         .check(
           sql`cardinality(body_types) > 0 and body_types <@ array['compact','hatchback','sedan','coupe','suv']::text[]`,
         ),

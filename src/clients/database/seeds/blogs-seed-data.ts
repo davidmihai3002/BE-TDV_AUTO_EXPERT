@@ -1,5 +1,3 @@
-// MOCK DATA — to be replaced (plan §9 D4). Romanian copy (D1), UTF-8, comma-below ș/ț only.
-// Shared by migrations 032/034; ticket 05 imports and extends it (featured slug must stay `dinamica-avansata-in-viraje`).
 import type { LegacyBlogContent as BlogContent } from 'src/types/blogs/blog-content-schema';
 
 export interface BlogCategorySeed {
@@ -23,29 +21,28 @@ export interface BlogSeed {
 }
 
 export const BLOG_CATEGORIES_SEED: BlogCategorySeed[] = [
-  { slug: 'mecanica-conducerii', name: 'Mecanica conducerii', sortOrder: 10 }, // Driving Mechanics
+  { slug: 'mecanica-conducerii', name: 'Mecanica conducerii', sortOrder: 10 },
   {
     slug: 'protocoale-de-siguranta',
     name: 'Protocoale de siguranță',
     sortOrder: 20,
-  }, // Safety Protocols
-  { slug: 'tehnologia-flotei', name: 'Tehnologia flotei', sortOrder: 30 }, // Fleet Tech
+  },
+  { slug: 'tehnologia-flotei', name: 'Tehnologia flotei', sortOrder: 30 },
   {
     slug: 'perspectiva-instructorilor',
     name: 'Perspectiva instructorilor',
     sortOrder: 40,
-  }, // Instructor Insights
-  { slug: 'condus-defensiv', name: 'Condus defensiv', sortOrder: 50 }, // Defensive Driving
+  },
+  { slug: 'condus-defensiv', name: 'Condus defensiv', sortOrder: 50 },
   {
     slug: 'intretinerea-vehiculului',
     name: 'Întreținerea vehiculului',
     sortOrder: 60,
-  }, // Vehicle Maintenance
-  { slug: 'siguranta-rutiera', name: 'Siguranță rutieră', sortOrder: 70 }, // Road Safety
-  { slug: 'maiestrie-tehnica', name: 'Măiestrie tehnică', sortOrder: 80 }, // Technical Mastery
+  },
+  { slug: 'siguranta-rutiera', name: 'Siguranță rutieră', sortOrder: 70 },
+  { slug: 'maiestrie-tehnica', name: 'Măiestrie tehnică', sortOrder: 80 },
 ];
 
-/** Desktop card order first (posts 1–4), then the mobile rows; F is the only featured post. */
 export const BLOGS_SEED: BlogSeed[] = [
   {
     slug: 'dinamica-avansata-in-viraje',

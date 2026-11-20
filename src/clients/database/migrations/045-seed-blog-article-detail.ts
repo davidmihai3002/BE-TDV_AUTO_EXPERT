@@ -1,7 +1,3 @@
-// MOCK DATA — to be replaced (plan §9 D4). Romanian copy (D1), UTF-8, comma-below ș/ț only.
-// Inline snapshot (frozen): the article from the Stitch design + 4 short related stubs, author Marcus Vance, 4 tags.
-// The main article is 04's featured row (same slug): only content, author, image and SEO columns are updated here;
-// 04's title, excerpt, published_at and is_featured are kept.
 import { Kysely, sql } from 'kysely';
 import { BLOGS_SEED } from '../seeds/blogs-seed-data';
 
@@ -33,7 +29,6 @@ const TAGS = [
   },
 ];
 
-/** Loose local shape of a v2 block (frozen snapshot; not the app's zod type). */
 interface SnapshotBlock {
   type: string;
   id: string;
@@ -356,7 +351,7 @@ const STUBS: SeedBlog[] = [
   },
 ];
 
-const WORDS_PER_MINUTE = 200; // inline copy of BlogsUtils (04)
+const WORDS_PER_MINUTE = 200;
 
 function readTimeMinutes(content: SeedBlog['content']): number {
   const words = content.blocks
@@ -443,7 +438,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     read_time_minutes: readTimeMinutes(b.content),
   });
 
-  // main article: upgrade 04's featured row in place, or insert it on a DB without 04's seed
   const existing = await db
     .selectFrom('blogs')
     .select('id')
@@ -516,7 +510,6 @@ export async function down(db: Kysely<any>): Promise<void> {
     .executeTakeFirst();
   const original = BLOGS_SEED.find((b) => b.slug === MAIN.slug);
   if (main && original) {
-    // 04's row: revert only the columns up() changed (content back to 04's text, still v2 for 040's constraint)
     await db.deleteFrom('blog_images').where('blog_id', '=', main.id).execute();
     await db.deleteFrom('blog_tags').where('blog_id', '=', main.id).execute();
     await db
@@ -556,7 +549,6 @@ export async function down(db: Kysely<any>): Promise<void> {
     await db.deleteFrom('blogs').where('id', '=', main.id).execute();
   }
 
-  // shared rows only if nothing else references them
   await sql`DELETE FROM tags t WHERE t.slug IN (${sql.join(TAGS.map((t) => t.slug))})
     AND NOT EXISTS (SELECT 1 FROM blog_tags bt WHERE bt.tag_id = t.id)`.execute(
     db,

@@ -5,11 +5,6 @@ import { db } from '../clients/database';
 import { computeReadTimeMinutes } from '../common/utils/blogs-utils';
 import { insertBlogSchema } from '../types/blogs/blogs-schemas';
 
-/**
- * Usage: npm run insert-local:blog -- ./src/content/blogs/my-blog.json [--dry-run]
- * Content may be v2 (`{ version: 2, blocks: [...] }`) or the legacy flat format (stored as v2).
- * Reference: src/content/blogs/dinamica-avansata-in-viraje.json. Everything runs in one transaction.
- */
 async function insertBlog(): Promise<void> {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
@@ -54,7 +49,6 @@ async function insertBlog(): Promise<void> {
       .executeTakeFirst();
     if (!category) throw new Error(`Unknown category "${categorySlug}"`);
 
-    // author: object → upsert by slug; authorSlug → must exist; legacy string → name only
     let authorId: string | null = null;
     let authorName: string;
     if (author && typeof author === 'object') {
@@ -94,7 +88,6 @@ async function insertBlog(): Promise<void> {
       authorName = author as string;
     }
 
-    // only one featured post at a time (blogs_single_featured_idx)
     if (blog.isFeatured) {
       await trx
         .updateTable('blogs')

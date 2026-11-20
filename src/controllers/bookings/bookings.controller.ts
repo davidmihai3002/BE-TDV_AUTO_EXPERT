@@ -18,7 +18,6 @@ export const BOOKINGS_THROTTLE = { limit: 5, ttl: 600_000 };
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
-  // Throttled per IP here only; GET endpoints stay unthrottled (no global guard).
   @Post('/bookings')
   @HttpCode(201)
   @UseGuards(ThrottlerGuard)

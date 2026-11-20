@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
-/** Block ids double as DOM ids / URL anchors. */
 export const blockIdSchema = z
   .string()
   .max(100)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Block id must be ASCII kebab-case');
-/** Material Symbols name (no dashes: "settings_input_component"). */
 export const iconNameSchema = z
   .string()
   .max(64)
@@ -102,7 +100,6 @@ export const blogContentV2Schema = z
   });
 export type BlogContentV2 = z.infer<typeof blogContentV2Schema>;
 
-/** The original flat format (`{ blocks: [{ id, heading, headingIconName, body }] }`). */
 export const legacyBlogContentSchema = z.object({
   blocks: z
     .array(
@@ -117,7 +114,6 @@ export const legacyBlogContentSchema = z.object({
 });
 export type LegacyBlogContent = z.infer<typeof legacyBlogContentSchema>;
 
-// legacy example rows used Lucide names; map them to Material Symbols
 const LEGACY_ICON_MAP: Record<string, string> = {
   blocks: 'view_agenda',
   'shield-check': 'verified_user',
@@ -134,7 +130,6 @@ const toIcon = (name?: string): string | null =>
     ? null
     : (LEGACY_ICON_MAP[name] ?? (/^[a-z0-9_]+$/.test(name) ? name : null));
 
-/** Each legacy block → an h2 (icon mapped) + one body paragraph per blank-line-separated chunk. */
 export function legacyToV2(content: LegacyBlogContent): BlogContentV2 {
   return {
     version: 2,
@@ -164,10 +159,6 @@ const legacyAsV2Schema = legacyBlogContentSchema
   .transform(legacyToV2)
   .pipe(blogContentV2Schema);
 
-/**
- * Insert-script input: documents with a `version` key are validated as v2 (so errors point at the exact block);
- * anything else is read as the legacy format and converted.
- */
 export const blogContentInputSchema = z
   .unknown()
   .transform((value, ctx): BlogContentV2 => {

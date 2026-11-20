@@ -2,7 +2,6 @@ import { SelectQueryBuilder } from 'kysely';
 import { Paginated } from 'src/types';
 import { PaginationQuery } from './pagination.schema';
 
-/** Runs the page query and a count over the same filters in parallel. */
 export async function paginate<DB, TB extends keyof DB, O>(
   qb: SelectQueryBuilder<DB, TB, O>,
   { page, pageSize }: PaginationQuery,

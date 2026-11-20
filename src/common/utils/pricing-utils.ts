@@ -1,16 +1,13 @@
-/** lei → integer bani. All price arithmetic is done in integers, never on floats. */
 export const toBani = (lei: number | string): number =>
   Math.round(Number(lei) * 100);
 export const fromBani = (bani: number): number => bani / 100;
 
 export interface QuoteAmounts {
-  /** lei */
   subtotal: number;
   processingFee: number;
   total: number;
 }
 
-/** price = rate × lessons + fee (in bani). Mirrored by the FE's calculate-quote.ts for instant display. */
 export function calculateQuoteAmounts(input: {
   rate: number | string;
   lessons: number;
@@ -29,7 +26,6 @@ export function calculateQuoteAmounts(input: {
   };
 }
 
-/** Allowed lesson counts: integer, within [min, max], on the step grid starting at min. */
 export function isValidLessonCount(
   lessons: number,
   s: { minLessons: number; maxLessons: number; lessonStep: number },

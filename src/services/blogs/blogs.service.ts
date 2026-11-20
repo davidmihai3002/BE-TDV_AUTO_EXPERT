@@ -88,7 +88,6 @@ export class BlogsService {
     return { items: related.map(this.blogsUtils.toRelatedBlogDto) };
   }
 
-  /** Validates each block on its own: one bad block is dropped (and logged), never a 500. */
   private parseBlocks(slug: string, content: unknown): ContentBlock[] {
     const blocks = (content as { blocks?: unknown } | null)?.blocks;
     if (!Array.isArray(blocks)) {

@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Booking requests (plan §9 D3). quoted_total stays NULL until 03 wires PricingService.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('bookings')
@@ -76,5 +75,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('bookings').execute(); // drops its indexes and trigger
+  await db.schema.dropTable('bookings').execute();
 }

@@ -9,10 +9,6 @@ const stripPhone = (v: unknown) =>
 const emptyToUndefined = (v: unknown) =>
   typeof v === 'string' && v.trim() === '' ? undefined : v;
 
-/**
- * POST /bookings body. `.strict()` rejects unknown keys (e.g. a client-sent `quotedTotal`).
- * `params.reason` is forwarded as `issues[].reason` so the FE can map it to Romanian copy.
- */
 export const createBookingSchema = z
   .object({
     fleetId: z.uuid(),
@@ -57,7 +53,6 @@ export const createBookingSchema = z
         .regex(/^[A-Z0-9]{1,8}$/)
         .optional(),
     ),
-    // pricing range rules (min 15 / max 60) come from 03's settings
     lessonsCount: z.number().int().min(1).max(200).optional(),
     message: z.preprocess(
       emptyToUndefined,
@@ -66,7 +61,7 @@ export const createBookingSchema = z
     gdprConsent: z.literal(true, {
       error: 'Consent is required',
     }),
-    website: z.string().max(0, 'Bot detected').optional(), // honeypot
+    website: z.string().max(0, 'Bot detected').optional(),
   })
   .strict();
 

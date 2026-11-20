@@ -3,7 +3,6 @@ import { Kysely, sql } from 'kysely';
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .alterTable('blogs')
-    // nullable until 033 backfills existing rows
     .addColumn('category_id', 'uuid', (c) =>
       c.references('blog_categories.id').onDelete('restrict'),
     )
@@ -30,7 +29,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .expression(sql`category_id, published_at DESC`)
     .execute();
 
-  // at most one featured post at a time
   await sql`CREATE UNIQUE INDEX blogs_single_featured_idx ON blogs (is_featured) WHERE is_featured`.execute(
     db,
   );

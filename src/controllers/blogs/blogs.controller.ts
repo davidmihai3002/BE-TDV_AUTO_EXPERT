@@ -29,7 +29,6 @@ export class BlogsController {
     return this.blogsService.getBlogsListing(query);
   }
 
-  // Static routes must stay declared before `/blogs/:slug`, or "categories" is matched as a slug.
   @Get('/blogs/categories')
   @Header('Cache-Control', 'public, max-age=60')
   getCategories(): Promise<BlogCategoriesResponseDto> {

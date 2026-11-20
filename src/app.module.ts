@@ -15,8 +15,6 @@ import { AllExceptionsFilter, RequestLoggerMiddleware } from './common';
 
 @Module({
   imports: [
-    // Not a global guard: only routes with @UseGuards(ThrottlerGuard) are limited (POST /bookings).
-    // In-memory storage — switch to Redis if the API is scaled horizontally (ticket 06 Q12).
     ThrottlerModule.forRoot([{ name: 'default', ttl: 600_000, limit: 5 }]),
     DatabaseModule,
     HealthModule,
@@ -27,7 +25,6 @@ import { AllExceptionsFilter, RequestLoggerMiddleware } from './common';
     PricingModule,
     BookingsModule,
   ],
-  // APP_FILTER (not useGlobalFilters) so every app built from this module, incl. e2e tests, gets the same envelope
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
 export class AppModule implements NestModule {

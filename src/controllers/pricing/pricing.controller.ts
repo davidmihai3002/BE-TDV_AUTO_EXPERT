@@ -18,7 +18,6 @@ export class PricingController {
     return this.pricingService.getOptions();
   }
 
-  /** Stateless, authoritative estimate; the FE calls it debounced after selection changes. */
   @Post('/pricing/quote')
   @HttpCode(200)
   @Header('Cache-Control', 'no-store')

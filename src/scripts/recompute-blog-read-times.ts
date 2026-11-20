@@ -1,7 +1,6 @@
 import { db } from '../clients/database';
 import { computeReadTimeMinutes } from '../common/utils/blogs-utils';
 
-/** Recomputes read_time_minutes for every blog from its content (e.g. after content is enriched). */
 async function recompute(): Promise<void> {
   const blogs = await db
     .selectFrom('blogs')

@@ -1,4 +1,3 @@
-// Unit tests: no DB. Operations are mocked; the real module would open a pg pool (and kysely is ESM-only).
 jest.mock('src/clients', () => ({}));
 
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -92,7 +91,7 @@ describe('BookingsService', () => {
         fleetId: FLEET_ID,
         instructorId: 'i-1',
         lessonsCount: 15,
-        licenseCategory: 'B', // defaulted because lessons were requested
+        licenseCategory: 'B',
         quotedTotal: 550,
         currency: 'RON',
         email: null,
@@ -140,7 +139,6 @@ describe('createBookingSchema', () => {
   });
 
   beforeEach(() => {
-    // 22:30 UTC on 18 Nov = 00:30 on 19 Nov in Bucharest → min date is 2026-11-20
     jest.useFakeTimers({ now: new Date('2026-11-18T22:30:00Z') });
   });
   afterEach(() => jest.useRealTimers());
@@ -188,7 +186,6 @@ describe('createBookingSchema', () => {
   });
 
   it('allows up to +90 days, rejects +91 and invalid dates', () => {
-    // today (Bucharest) = 2026-11-19 → +90 = 2027-02-17
     expect(
       createBookingSchema.safeParse(body({ preferredDate: '2027-02-17' }))
         .success,

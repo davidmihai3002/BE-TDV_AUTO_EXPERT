@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../database';
 
-/** Instructor phone numbers are never selected here (pricing endpoints don't expose them). */
 @Injectable()
 export class PricingOperations {
   getSettings() {
@@ -49,7 +48,6 @@ export class PricingOperations {
       .executeTakeFirst();
   }
 
-  /** One row per (active car, active category, active rate). */
   getOptionVehicleRates() {
     return db
       .selectFrom('pricingVehicleRates as r')
@@ -82,7 +80,6 @@ export class PricingOperations {
       .execute();
   }
 
-  /** Active car with an active rate in the given category. */
   getVehicleWithRate(vehicleId: string, categoryId: string) {
     return db
       .selectFrom('fleet as f')
@@ -102,7 +99,6 @@ export class PricingOperations {
       .executeTakeFirst();
   }
 
-  /** Is the car priced in any active category? (distinguishes "unknown car" from "not available for B") */
   hasAnyActiveRate(vehicleId: string) {
     return db
       .selectFrom('pricingVehicleRates as r')

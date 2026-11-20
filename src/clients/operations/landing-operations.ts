@@ -3,7 +3,6 @@ import { db } from '../database';
 import type { BodyTypeCount } from 'src/common/utils/landing-utils';
 import type { GetFaqsQueryDto } from 'src/types';
 
-/** Explicit selects (no selectAll): sortOrder / isPublished / timestamps stay internal. */
 @Injectable()
 export class LandingOperations {
   getSections() {
@@ -91,7 +90,6 @@ export class LandingOperations {
       .execute();
   }
 
-  /** Read-only aggregate over 06's fleet (no change to 06's files). */
   getFleetBodyTypeCounts(): Promise<BodyTypeCount[]> {
     return db
       .selectFrom('fleet')

@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Single-row config table (id fixed to 1). Money is numeric(10,2) in lei.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('pricing_settings')

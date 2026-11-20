@@ -6,7 +6,6 @@ export const blogSlugSchema = z
   .max(64)
   .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 
-/** Words that are static routes under /blogs/* (must be declared before /blogs/:slug); never valid post slugs. */
 export const RESERVED_BLOG_SLUGS = [
   'categories',
   'featured',
@@ -41,10 +40,6 @@ const imageInputSchema = z.object({
   height: z.number().int().positive().nullish(),
 });
 
-/**
- * JSON accepted by `npm run insert-local:blog`. `content` may be v2 or legacy (converted to v2).
- * Author: `authorSlug` (existing author) or an `author` object (upserted by slug); plain-string `author` is legacy.
- */
 export const insertBlogSchema = z
   .object({
     title: z.string().trim().min(1),
@@ -53,7 +48,6 @@ export const insertBlogSchema = z
     authorSlug: blogSlugSchema.optional(),
     content: blogContentInputSchema,
     excerpt: z.string().trim().min(1),
-    // root-relative (FE public/) or absolute
     image: z
       .string()
       .regex(/^(https?:\/\/|\/)\S+$/, 'Expected an absolute URL or a /path'),
@@ -105,7 +99,6 @@ export type InsertBlogInput = z.infer<typeof insertBlogSchema>;
 
 const pageSize = z.coerce.number().int().min(1).max(24);
 
-/** GET /blogs query. `limit` is an alias for `pageSize` (ticket 02); `pageSize` wins when both are sent. */
 export const blogsListingQuerySchema = z
   .object({
     page: z.coerce.number().int().min(1).default(1),

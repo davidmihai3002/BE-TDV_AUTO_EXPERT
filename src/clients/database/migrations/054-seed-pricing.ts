@@ -1,5 +1,3 @@
-// MOCK DATA — to be replaced (plan §9 D4). Prices in RON (lei), VAT included.
-// Numbered 054 on purpose: rates are keyed by 06's car slugs, so on a fresh DB this must run after 052.
 import { Kysely } from 'kysely';
 
 const CATEGORY_B = {

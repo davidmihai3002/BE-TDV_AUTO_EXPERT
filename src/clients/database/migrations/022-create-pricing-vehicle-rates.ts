@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Per-car, per-category lesson price. Separate table so 06's `fleet` schema stays untouched.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('pricing_vehicle_rates')

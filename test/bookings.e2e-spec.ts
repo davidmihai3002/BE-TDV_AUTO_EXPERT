@@ -8,8 +8,6 @@ interface Issue {
   path: string;
 }
 
-// Needs the local DB with migrations 050–053 applied: npm run test:e2e:local
-// The Bucharest-midnight edge (B9) is covered with a fixed clock in bookings.service.spec.ts.
 describe('Bookings (e2e)', () => {
   let app: NestExpressApplication;
   let golfR: { id: string; instructorId: string | null };
@@ -81,7 +79,7 @@ describe('Bookings (e2e)', () => {
       currency: 'RON',
       status: 'noua',
       phone: '+40722123456',
-      instructorId: golfR.instructorId, // B17: active instructor snapshotted
+      instructorId: golfR.instructorId,
       preferredDate: addDaysIso(today(), 1),
     });
     expect(row.gdprConsentAt).toBeInstanceOf(Date);
@@ -100,7 +98,6 @@ describe('Bookings (e2e)', () => {
     expect(row).toMatchObject({
       licenseCategory: 'B',
       lessonsCount: 15,
-      // Golf R (manual): 35 lei × 15 + 25 lei fee
       quotedTotal: 550,
       currency: 'RON',
     });

@@ -1,8 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Converts legacy `{ blocks: [{ id, heading, headingIconName, body }] }` content to the v2 block union.
-// Frozen snapshot: legacyToV2/v2ToLegacy are inlined on purpose (migrations must not import app code).
-
 type LegacyBlock = {
   id: string;
   heading: string;
@@ -60,7 +57,6 @@ export function legacyToV2(content: { blocks: LegacyBlock[] }) {
   };
 }
 
-/** Lossy: groups by heading, flattens text blocks into `body` ("\n\n"), drops figures; pre-heading blocks → "intro". */
 function v2ToLegacy(content: { blocks: V2Block[] }): { blocks: LegacyBlock[] } {
   const out: LegacyBlock[] = [];
   const textOf = (b: V2Block): string[] => {
@@ -101,14 +97,13 @@ function v2ToLegacy(content: { blocks: V2Block[] }): { blocks: LegacyBlock[] } {
     const text = textOf(b).join('\n\n');
     if (text) current.body = current.body ? `${current.body}\n\n${text}` : text;
   }
-  // legacy schema requires a non-empty body
   return { blocks: out.map((b) => ({ ...b, body: b.body || b.heading })) };
 }
 
 export async function up(db: Kysely<any>): Promise<void> {
   const rows = await db.selectFrom('blogs').select(['id', 'content']).execute();
   for (const row of rows as { id: string; content: StoredContent }[]) {
-    if (row.content?.version === 2) continue; // idempotent
+    if (row.content?.version === 2) continue;
     await db
       .updateTable('blogs')
       .set({

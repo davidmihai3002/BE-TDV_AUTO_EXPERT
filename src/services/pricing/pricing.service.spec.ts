@@ -1,4 +1,3 @@
-// Unit tests: no DB. Operations are mocked; the real module would open a pg pool (and kysely is ESM-only).
 jest.mock('src/clients', () => ({}));
 
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -26,7 +25,7 @@ const vehicle = (over = {}) => ({
   carName: 'Volkswagen Golf R',
   transmission: TransmissionType.Manual,
   fuel: FuelType.Petrol,
-  lessonPrice: '35.00', // pg numeric arrives as a string without the type parser
+  lessonPrice: '35.00',
   ...over,
 });
 

@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Marketing figures stored as ro-RO display text ('5.000'), not metrics.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('landing_stats')
@@ -9,9 +8,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn('value', 'text', (c) => c.notNull())
     .addColumn('suffix', 'text')
-    .addColumn('short_suffix', 'text') // mobile override
+    .addColumn('short_suffix', 'text')
     .addColumn('label', 'text', (c) => c.notNull())
-    .addColumn('short_label', 'text') // mobile override
+    .addColumn('short_label', 'text')
     .addColumn('accent', 'text', (c) =>
       c.notNull().check(sql`accent in ('primary','secondary','tertiary')`),
     )

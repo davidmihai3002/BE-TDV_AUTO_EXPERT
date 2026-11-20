@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Landing page copy blocks (hero, advantage, fleet, insights, faq, cta), keyed by `key`.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('landing_sections')

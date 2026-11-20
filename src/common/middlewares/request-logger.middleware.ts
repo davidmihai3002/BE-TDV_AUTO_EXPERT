@@ -4,11 +4,6 @@ import type { NextFunction, Request, Response } from 'express';
 
 const INCOMING_ID = /^[\w-]{8,64}$/;
 
-/**
- * Gives every request an id (a valid incoming `x-request-id` is kept, otherwise a new UUID), echoes it in the
- * response header and logs one line per request on finish. Bodies, query secrets and headers are never logged
- * (only a truncated user agent).
- */
 @Injectable()
 export class RequestLoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');

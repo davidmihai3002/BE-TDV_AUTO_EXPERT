@@ -8,7 +8,6 @@ import {
 } from 'src/types';
 import type { FacetCountRow, FleetCarRow } from 'src/common/utils/fleet-utils';
 
-/** Active cars joined with their instructor (null when the instructor is inactive). */
 function baseQuery() {
   return db
     .selectFrom('fleet')
@@ -79,7 +78,6 @@ export class FleetOperations {
     return Number(row.total);
   }
 
-  /** Counts per value over all active cars, ignoring the current filters. */
   async getFleetFacets(): Promise<{
     transmission: FacetCountRow<TransmissionType>[];
     fuel: FacetCountRow<FuelType>[];

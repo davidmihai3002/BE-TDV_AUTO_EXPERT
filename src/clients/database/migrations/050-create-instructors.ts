@@ -1,6 +1,5 @@
 import { Kysely, sql } from 'kysely';
 
-// Migrations run without CamelCasePlugin: snake_case identifiers only.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('instructors')

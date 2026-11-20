@@ -1,4 +1,3 @@
-// Unit tests: no DB. Operations are mocked; the real module would open a pg pool (and kysely is ESM-only).
 jest.mock('src/clients', () => ({}));
 
 import {
@@ -43,7 +42,7 @@ describe('toFleetHighlightDto', () => {
         c(BodyType.Hatchback, TransmissionType.Manual, '1'),
         c(BodyType.Sedan, TransmissionType.Automatic, 2),
         c(BodyType.Sedan, TransmissionType.Manual, 1),
-        c(BodyType.Coupe, TransmissionType.Automatic, 1), // not covered
+        c(BodyType.Coupe, TransmissionType.Automatic, 1),
       ],
     );
     expect(dto).toMatchObject({
@@ -150,7 +149,7 @@ describe('LandingService.getLanding', () => {
     };
     const out = await new LandingService(ops).getLanding();
     expect(Object.keys(out.sections)).toEqual(['hero', 'cta']);
-    expect(out.fleetHighlights.map((h) => h.slug)).toEqual(['h-3']); // SUV card omitted (0 cars)
+    expect(out.fleetHighlights.map((h) => h.slug)).toEqual(['h-3']);
     expect(landingResponseSchema.safeParse(out).success).toBe(true);
   });
 });

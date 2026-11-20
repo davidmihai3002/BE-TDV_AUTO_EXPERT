@@ -8,8 +8,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn('title', 'text', (c) => c.notNull())
     .addColumn('description', 'text', (c) => c.notNull())
-    .addColumn('icon', 'text', (c) => c.notNull()) // desktop Material Symbol
-    .addColumn('icon_mobile', 'text') // mobile override
+    .addColumn('icon', 'text', (c) => c.notNull())
+    .addColumn('icon_mobile', 'text')
     .addColumn('accent', 'text', (c) =>
       c.notNull().check(sql`accent in ('primary','secondary','tertiary')`),
     )

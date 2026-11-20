@@ -1,5 +1,3 @@
-// MOCK DATA — to be replaced (plan §9 D4). Copy is Romanian; stats/FAQ legal details to verify with the school.
-// UTF-8, comma-below ș/ț only. Images are interim copies of the fleet photos (public/images/landing/).
 import { Kysely } from 'kysely';
 
 const SECTIONS: Record<string, unknown>[] = [

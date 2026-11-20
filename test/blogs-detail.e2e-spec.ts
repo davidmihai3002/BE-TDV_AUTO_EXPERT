@@ -27,7 +27,6 @@ interface Detail {
 
 const SLUG = 'dinamica-avansata-in-viraje';
 
-// Needs the local DB with migrations 040–045 applied: npm run test:e2e:local
 describe('Blog article detail (e2e)', () => {
   let app: NestExpressApplication;
   const get = (url: string) => request(app.getHttpServer()).get(url);
@@ -162,7 +161,6 @@ describe('Blog article detail (e2e)', () => {
       .execute();
     try {
       await get(`/blogs/${slug}`).expect(404);
-      // and it never shows up as related
       const body = (await get(`/blogs/${SLUG}/related?limit=6`).expect(200))
         .body as {
         items: { slug: string }[];

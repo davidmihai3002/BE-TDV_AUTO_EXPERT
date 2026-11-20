@@ -13,7 +13,6 @@ export enum FuelType {
   Electric = 'electric',
 }
 
-/** Training level (drives the card badge and the `category` filter). Not the license category (`B`). */
 export enum CarCategory {
   Beginner = 'beginner',
   Fundamentals = 'fundamentals',
@@ -29,7 +28,6 @@ export enum BodyType {
   Suv = 'suv',
 }
 
-// numeric columns are numbers thanks to the pg type parser registered in database.ts
 export interface FleetTable {
   id: ImmutableGenerated<string>;
   slug: string;

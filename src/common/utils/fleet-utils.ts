@@ -6,7 +6,6 @@ import {
   TransmissionType,
 } from 'src/types';
 
-/** Flat row produced by FleetOperations (fleet columns + aliased instructor columns from the LEFT JOIN). */
 export interface FleetCarRow {
   id: string;
   slug: string;
@@ -44,7 +43,6 @@ export function isUuid(value: string): boolean {
   return UUID_RE.test(value);
 }
 
-// pg returns numeric/bigint as strings unless the type parsers are active; convert defensively in one place.
 const toNumberOrNull = (v: number | string | null): number | null =>
   v === null ? null : Number(v);
 
@@ -94,7 +92,6 @@ function toCounts<V extends string>(
   return out;
 }
 
-/** Fills every enum value (missing → 0) so the FE can disable empty chips. */
 export function toFacetsDto(rows: {
   transmission: FacetCountRow<TransmissionType>[];
   fuel: FacetCountRow<FuelType>[];

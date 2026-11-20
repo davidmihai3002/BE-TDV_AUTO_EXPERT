@@ -1,4 +1,3 @@
-// MOCK DATA — to be replaced (plan §9 D4). Cars, specs, instructors and images are Stitch placeholders.
 import { Kysely, sql } from 'kysely';
 
 const PLACEHOLDER_SLUGS = [
@@ -156,7 +155,6 @@ const CARS: SeedCar[] = [
   },
 ];
 
-// Copies of the 003 rows (with 051's defaults) so 052.down → 051.down → 003.down still works.
 const PLACEHOLDERS = [
   {
     slug: 'toyota-corolla-hybrid',
